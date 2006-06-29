@@ -3,6 +3,13 @@
 
 layer *player_layer;
 
+int get_tile( layer *lay, int xpos, int ypos )
+{
+    int where=(ypos*lay->width)+xpos;
+
+    return lay->tiles[where];    
+}
+
 void set_tile( layer *lay, int xpos, int ypos, int index )
 {
     int where=(ypos*lay->width)+xpos;

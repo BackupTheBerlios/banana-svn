@@ -7,8 +7,8 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include "SDL_net.h"
-#include "SDL_opengl.h"
 #include "SDL_thread.h"
+#include "SDL_opengl.h"
 #include "gamegui.h"
 
 /* screen width, height, and bit depth */
@@ -65,6 +65,15 @@ typedef struct font
 
 }font_t;
 
+typedef struct player
+{
+    float xpos, ypos;
+    char name[80];
+
+    IPaddress *ip;
+    TCPsocket socket;
+}player_t;
+
 /* main.c */
 int get_videoflags();
 void quit( int returnCode );
@@ -106,6 +115,7 @@ typedef struct layer
 }layer;
 
 void set_tile( layer *lay, int xpos, int ypos, int index );
+int get_tile( layer *lay, int xpos, int ypos );
 void load_map( char *filename );
 layer *get_player_layer();
 layer *create_layer( int width, int height );
@@ -160,12 +170,27 @@ void gui_get_char_size(int c, int *width, int *height);
 void *gui_get_char_image(int c);
 void gui_get_string_size(char *s, int *width, int *height);
 
-/* net.c */
-void server_listen( int port );
-void client_listen( char *ip, int port );
-void update_chat_buffer( char *text );
-char *get_chat_buffer();
+/* net_server.c */
+#define MESG_CHAT   'A'
+#define MESG_TILE   'B'
+void start_server( int port );
+void server_listen();
+int get_server_active();
+
+/* net_client.c */
+void client_listen();
+int get_client_active();
+void connect_to_server( char *host, int port );
+TCPsocket get_server_socket();
+
+/* net_common.c */
+void send_message( char *buffer, int len );
 void net_change_tile( int x, int y );
+
+/* player.c */
+player_t *get_player( int index );
+void set_num_players( int count );
+int get_num_players();
 
 /* Dialogs. */
 void show_title_dialog( int modal );

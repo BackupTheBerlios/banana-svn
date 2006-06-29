@@ -19,7 +19,7 @@ static void close(gg_widget_t *widget, void *data)
 static void chat_changed(gg_widget_t *widget, void *data)
 {
     gg_entry_t *entry=GG_ENTRY(widget);
-    update_buffer( entry->text );
+  //  update_buffer( entry->text );
 }
 
 static gg_dialog_t *create_chat_dialog( int modal )

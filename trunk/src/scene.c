@@ -19,9 +19,9 @@ void draw_scene()
 
     gg_dialog_cleanup();
 
-    gg_system_get_image_size(get_menu_style()->border.textured.image[0], &size, NULL);
+    /*gg_system_get_image_size(get_menu_style()->border.textured.image[0], &size, NULL);
     area.x = 0; area.y = 0;
-    gui_get_string_size(get_chat_buffer(), &area.width, &area.height);
+    gui_get_string_size(get_chat_buffer(), &area.width, &area.height);*/
 
     /* Clear The Screen And The Depth Buffer */
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
@@ -57,7 +57,7 @@ void draw_scene()
         glPopMatrix();
     }
  
-    if ( strlen(get_chat_buffer()) > 0 )
+  /*  if ( strlen(get_chat_buffer()) > 0 )
     {
         glPushMatrix();
         glTranslatef( 20.0f, 20.0f, 0.0f );
@@ -67,7 +67,7 @@ void draw_scene()
         gg_system_draw_string(get_chat_buffer(), 0, 0, &col_white, 0, 0, 0);
         glDisable(GL_BLEND);
         glPopMatrix();
-    }
+    }*/
 
     glPushMatrix();
     glTranslatef(get_mouse_x(), get_mouse_y(), 0.0f );

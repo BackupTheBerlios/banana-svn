@@ -12,6 +12,12 @@ void gameloop()
     else
         printf( "Dialog open: None\n" ); */
 
+    if ( get_server_active() )
+        server_listen();
+
+    if ( get_client_active() )
+        client_listen();
+
     process_sdl_events();
     draw_scene();
 }

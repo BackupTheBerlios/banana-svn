@@ -37,7 +37,7 @@ static void port_changed(gg_widget_t *widget, void *data)
 
 static void start(gg_widget_t *widget, void *data)
 {
-    client_listen(client_ip,client_port);
+    connect_to_server(client_ip,client_port);
     gg_dialog_close();
 }
 

@@ -20,7 +20,7 @@ static void close(gg_widget_t *widget, void *data)
 
 static void start(gg_widget_t *widget, void *data)
 {
-    server_listen( server_port );
+    start_server( server_port );
     gg_dialog_close();
 }
 
