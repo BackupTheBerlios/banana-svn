@@ -15,6 +15,7 @@ static gg_colour_t col_white =
 void draw_scene()
 {
     int size;
+    int i;
     gg_rect_t area;
 
     gg_dialog_cleanup();
@@ -57,15 +58,26 @@ void draw_scene()
         glPopMatrix();
     }
  
-  /*  if ( strlen(get_chat_buffer()) > 0 )
+    glPushMatrix();
+    glTranslatef( 20.0f, 20.0f, 0.0f );
+    for (i=0;i<5;i++)
+    {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
+        gg_system_draw_string(get_chat_buffer_line(i), 0, 0, &col_white, 0, 0, 0);
+        glDisable(GL_BLEND);
+        glTranslatef( 0.0f, 20.0f, 0.0f );
+    }
+    glPopMatrix();
+
+   /* if ( strlen(get_chat_buffer_line(0)) > 0 )
     {
         glPushMatrix();
         glTranslatef( 20.0f, 20.0f, 0.0f );
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);     
+    
         draw_border(get_menu_style()->border.textured.image, area, size);    
-        gg_system_draw_string(get_chat_buffer(), 0, 0, &col_white, 0, 0, 0);
-        glDisable(GL_BLEND);
+        gg_system_draw_string(get_chat_buffer_line(0), 0, 0, &col_white, 0, 0, 0);
+
         glPopMatrix();
     }*/
 

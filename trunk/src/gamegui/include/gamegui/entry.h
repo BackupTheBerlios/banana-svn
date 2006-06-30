@@ -33,8 +33,10 @@
     int max_len; \
     int cursor_pos; \
     int display_pos; \
-    void (* func) (gg_widget_t *widget, void *data); \
-    void *func_data;
+    void (* change_func) (gg_widget_t *widget, void *data); \
+    void (* enter_func) (gg_widget_t *widget, void *data); \
+    void *change_func_data; \
+    void *enter_func_data; \
 
 /** Text entry widget state. */
 typedef struct w_entry
@@ -48,6 +50,10 @@ void gg_entry_render(gg_widget_t *widget, int x, int y, int focus);
 int gg_entry_input(gg_widget_t *widget, gg_event_t event);
 
 void gg_entry_init(gg_entry_t *entry);
+
+void gg_entry_set_change_callback(gg_entry_t *entry, void (* callback) (gg_widget_t *, void *), void *func_data);
+
+void gg_entry_set_enter_callback(gg_entry_t *entry, void (* callback) (gg_widget_t *, void *), void *func_data);
 
 gg_widget_t *gg_entry_create();
 

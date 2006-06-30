@@ -184,8 +184,13 @@ void connect_to_server( char *host, int port );
 TCPsocket get_server_socket();
 
 /* net_common.c */
+#define CHAT_LINES 5
 void send_message( char *buffer, int len );
 void net_change_tile( int x, int y );
+char *get_chat_buffer_line( int line );
+void add_chat_buffer_line( char *text );
+int get_chat_buffer_lines();
+void send_chat_message( char *text );
 
 /* player.c */
 player_t *get_player( int index );

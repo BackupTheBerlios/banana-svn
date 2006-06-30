@@ -19,11 +19,6 @@ int get_server_active()
     return server_active;
 }
 
-void server_send_message( char *buffer )
-{
-    printf( "Sending message\n" );
-}
-
 void server_listen()
 {
     int i=0;
@@ -59,20 +54,21 @@ void server_listen()
     	{   
             if (SDLNet_SocketReady(get_player(i)->socket))
             {
-                printf( "Player %i active.\n", i );
+                //printf( "Player %i active.\n", i );
         		if (SDLNet_TCP_Recv(get_player(i)->socket, buffer, 512))
         		{
                     switch( buffer[0] )
                     {
                         case MESG_CHAT:
                             //printf( "Chat message\n" );
+                            add_chat_buffer_line( buffer+1 );
                             //memcpy(chat_buffer, buffer+1, 500);
                             //printf( "Chat buffer is now: %s\n", chat_buffer );
                             break;
                         case MESG_TILE:
-                            printf( "Tile message\n" );
+                            //printf( "Tile message\n" );
                             set_tile(get_player_layer(), buffer[1], buffer[2], 1);
-                            printf( "%i,%i\n", buffer[1], buffer[2] );
+                            //printf( "%i,%i\n", buffer[1], buffer[2] );
                             //send_message( buffer, 512 );
                             break;
                     }

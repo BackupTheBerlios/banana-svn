@@ -1,6 +1,60 @@
 
 #include "main.h"
 
+char chat_buffer[CHAT_LINES][80];
+int chat_buffer_lines=0;
+
+int get_chat_buffer_lines()
+{
+    return chat_buffer_lines;
+}
+
+char *get_chat_buffer_line( int line )
+{
+    return chat_buffer[line];
+}
+
+void add_chat_buffer_line( char *text )
+{
+    int i=0;
+
+    printf( "Got %s:%i\n", text, chat_buffer_lines );
+
+    if ( chat_buffer_lines > CHAT_LINES-1 )
+    {
+        printf( "Overlfow..\n" );
+        //chat_buffer_lines=CHAT_LINES;
+
+        for (i=1;i<CHAT_LINES;i++)
+        {
+            strcpy(chat_buffer[i-1],chat_buffer[i]);
+        }
+        strcpy(chat_buffer[chat_buffer_lines-1], text);
+    }
+    else
+    {
+        printf( "Grow..\n" );
+        strcpy(chat_buffer[chat_buffer_lines], text);
+
+        chat_buffer_lines++;
+    }
+
+    for (i=0; i<CHAT_LINES;i++ )
+    {
+       // printf( "[%i] %s\n", i, chat_buffer[i] );
+    }    
+}
+
+void send_chat_message( char *text )
+{
+    char buffer[512];
+
+    buffer[0]=MESG_CHAT;
+    strcpy(buffer+1,text);
+
+    send_message( &buffer, strlen(text)+1 );
+}
+
 void send_message( char *buffer, int len )
 {
     int i=0;
@@ -8,7 +62,6 @@ void send_message( char *buffer, int len )
     if (get_server_active())
     {
         /* Server running. Send message to all connected clients */
-        printf( "Sending server message...\n" );
         for (i=0;i<get_num_players();i++)
         {
             if (SDLNet_TCP_Send(get_client_socket(i), (void *)buffer, 512) < len)

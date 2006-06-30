@@ -16,10 +16,18 @@ static void close(gg_widget_t *widget, void *data)
     gg_dialog_close();
 }
 
-static void chat_changed(gg_widget_t *widget, void *data)
+static void send_chat(gg_widget_t *widget, void *data)
 {
     gg_entry_t *entry=GG_ENTRY(widget);
-  //  update_buffer( entry->text );
+
+    if ( strlen(entry->text) > 0 )
+    {
+        add_chat_buffer_line( entry->text );
+        send_chat_message( entry->text );
+
+        entry->text[0] = '\0';
+        entry->cursor_pos=0;
+    }
 }
 
 static gg_dialog_t *create_chat_dialog( int modal )
@@ -37,7 +45,7 @@ static gg_dialog_t *create_chat_dialog( int modal )
 
     hbox=gg_hbox_create(0);
     widget = gg_entry_create();
-    gg_entry_set_callback(GG_ENTRY(widget), chat_changed, NULL); 
+    gg_entry_set_enter_callback(GG_ENTRY(widget), send_chat, NULL); 
     gg_set_requested_size(widget,500,0);
     gg_container_append(GG_CONTAINER(vbox), widget);
     

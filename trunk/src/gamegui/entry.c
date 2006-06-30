@@ -192,6 +192,11 @@ int gg_entry_input(gg_widget_t *widget, gg_event_t event)
                     entry->text[i - 1] = entry->text[i];
             }
         }
+        else if (event.key == GG_KEY_ACTION)
+        {
+            if (entry->enter_func)
+                entry->enter_func(widget, entry->enter_func_data);
+        }
         else
         {
             if ((event.key > 0) && (event.key <= 255))
@@ -209,8 +214,8 @@ int gg_entry_input(gg_widget_t *widget, gg_event_t event)
                 return 0;
         }
 
-        if (entry->func)
-            entry->func(widget, entry->func_data);
+        if (entry->change_func)
+            entry->change_func(widget, entry->change_func_data);
     }
 
     if (event.type == GG_EVENT_MOUSE
@@ -265,8 +270,10 @@ void gg_entry_init(gg_entry_t *entry)
     entry->height += ENTRY_SPACING * 2;
     entry->height += 5;
     entry->display_pos = 0;
-    entry->func = NULL;
-    entry->func_data = NULL;
+    entry->change_func = NULL;
+    entry->change_func_data = NULL;
+    entry->enter_func = NULL;
+    entry->enter_func_data = NULL;
 }
 
 /** @brief Creates a text entry widget.
@@ -284,8 +291,14 @@ gg_widget_t *gg_entry_create()
     return GG_WIDGET(entry);
 }
 
-void gg_entry_set_callback(gg_entry_t *entry, void (* callback) (gg_widget_t *, void *), void *func_data)
+void gg_entry_set_change_callback(gg_entry_t *entry, void (* callback) (gg_widget_t *, void *), void *func_data)
 {
-    entry->func = callback;
-    entry->func_data = func_data;
+    entry->change_func = callback;
+    entry->change_func_data = func_data;
+}
+
+void gg_entry_set_enter_callback(gg_entry_t *entry, void (* callback) (gg_widget_t *, void *), void *func_data)
+{
+    entry->enter_func = callback;
+    entry->enter_func_data = func_data;
 }

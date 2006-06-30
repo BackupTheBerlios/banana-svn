@@ -55,7 +55,7 @@ static gg_dialog_t *create_server_dialog( int modal )
     gg_label_set_colour(GG_LABEL(widget), &col_white, &col_trans );
     gg_container_append(GG_CONTAINER(hbox), widget);
     widget = gg_entry_create();
-    gg_entry_set_callback(GG_ENTRY(widget), port_changed, NULL); 
+    gg_entry_set_change_callback(GG_ENTRY(widget), port_changed, NULL); 
     gg_container_append(GG_CONTAINER(hbox), widget);
     gg_container_append(GG_CONTAINER(vbox), hbox);
 

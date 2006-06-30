@@ -20,8 +20,6 @@ void net_change_tile( int x, int y )
     buffer[1]=x;
     buffer[2]=y;
 
-    printf( "Changed. %i %i\n", x, y );
-
     send_message( &buffer, 3 );
 }
 /* ^----- TEMPORARY!!! ----^ */
@@ -45,24 +43,25 @@ void client_listen()
     if (client_active)
     {
         num_active_sockets=SDLNet_CheckSockets(server_sockets, 0);
-        printf( "Num sockets: %i\n", num_active_sockets );
+      //  printf( "Num sockets: %i\n", num_active_sockets );
     
         if (SDLNet_SocketReady(server_socket))
         {
-            printf( "Server message recieved.\n" );
+            //printf( "Server message recieved.\n" );
       		if (SDLNet_TCP_Recv(server_socket, buffer, 512))
        		{
                 switch( buffer[0] )
                 {
                     case MESG_CHAT:
+                        add_chat_buffer_line( buffer+1 );
                         //printf( "Chat message\n" );
                         //memcpy(chat_buffer, buffer+1, 500);
                         //printf( "Chat buffer is now: %s\n", chat_buffer );
                         break;
                     case MESG_TILE:
-                        printf( "Tile message\n" );
+                        //printf( "Tile message\n" );
                         set_tile(get_player_layer(), buffer[1], buffer[2], 1);
-                        printf( "%i,%i\n", buffer[1], buffer[2] );
+                        //printf( "%i,%i\n", buffer[1], buffer[2] );
                         //send_message( buffer, 512 );
                         break;
                 }
@@ -101,5 +100,5 @@ void connect_to_server( char *host, int port )
     SDLNet_TCP_AddSocket(server_sockets, server_socket);
 
     client_active=TRUE;
-    printf( "Server started.\n" );
+    printf( "Connected to server.\n" );
 }

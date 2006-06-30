@@ -11,7 +11,7 @@ void process_mouse()
     {        
         if ( get_tile(get_player_layer(), (get_camera_x()+get_mouse_x())/32, (get_camera_y()+get_mouse_y())/32 ) !=1 )
         {
-            printf( "Tile changed!\n" );
+           // printf( "Tile changed!\n" );
             set_tile(get_player_layer(), (get_camera_x()+get_mouse_x())/32, (get_camera_y()+get_mouse_y())/32, 1);
 
             /* TEMporary!!!*/
