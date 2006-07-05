@@ -25,6 +25,7 @@ int main()
 
 void quit( int retcode )
 {
+    send_disconnect_message();
 	SDLNet_Quit();
     SDL_Quit();
     exit( retcode );

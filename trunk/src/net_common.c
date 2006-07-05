@@ -22,7 +22,7 @@ void add_chat_buffer_line( char *text )
 
     if ( chat_buffer_lines > CHAT_LINES-1 )
     {
-        printf( "Overlfow..\n" );
+       // printf( "Overlfow..\n" );
         //chat_buffer_lines=CHAT_LINES;
 
         for (i=1;i<CHAT_LINES;i++)
@@ -33,7 +33,7 @@ void add_chat_buffer_line( char *text )
     }
     else
     {
-        printf( "Grow..\n" );
+       // printf( "Grow..\n" );
         strcpy(chat_buffer[chat_buffer_lines], text);
 
         chat_buffer_lines++;
@@ -62,13 +62,16 @@ void send_message( char *buffer, int len )
     if (get_server_active())
     {
         /* Server running. Send message to all connected clients */
-        for (i=0;i<get_num_players();i++)
+        for (i=1;i<MAX_PLAYERS;i++)
         {
-            if (SDLNet_TCP_Send(get_client_socket(i), (void *)buffer, 512) < len)
-      	    {
-      		    printf( "SDLNet_TCP_Send: %s\n", SDLNet_GetError());
-       		    exit(EXIT_FAILURE);
-       	    }
+            if (get_player_active(i))
+            {
+                if (SDLNet_TCP_Send(get_client_socket(i), (void *)buffer, 512) < len)
+          	    {
+          		    printf( "SDLNet_TCP_Send: %s\n", SDLNet_GetError());
+           		    exit(EXIT_FAILURE);
+           	    }
+            }
         }
 
     }

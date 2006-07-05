@@ -1,16 +1,6 @@
 
 #include "main.h"
 
-static gg_colour_t col_trans =
-    {
-        0.0f, 0.0f, 0.0f, 0.0f
-    };
-
-static gg_colour_t col_white =
-    {
-        1.0f, 1.0f, 1.0f, 1.0f
-    };
-
 static void close(gg_widget_t *widget, void *data)
 {
     gg_dialog_close();
@@ -60,7 +50,9 @@ static gg_dialog_t *create_chat_dialog( int modal )
 
 void show_chat_dialog( int modal )
 {
-    if (modal)
-        grab_framebuffer();     
-    gg_dialog_open(create_chat_dialog(modal));
+    //if (modal)
+        //grab_framebuffer(); 
+    
+    if (!gg_dialog_current())
+        gg_dialog_open(create_chat_dialog(modal));
 }

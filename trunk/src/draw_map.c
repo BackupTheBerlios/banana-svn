@@ -1,11 +1,6 @@
 
 #include "main.h"
 
-static gg_colour_t col_black =
-{
-    0.0f, 0.0f, 0.0f, 1.0f
-};
-
 void draw_layer( layer *lay )
 {
     int i=0, j=0;

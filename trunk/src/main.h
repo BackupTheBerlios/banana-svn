@@ -16,6 +16,7 @@
 #define SCREEN_HEIGHT 480
 #define SCREEN_BPP     32
 #define TILE_SIZE      32
+#define MAX_PLAYERS    16
 
 /* Define our booleans */
 #define TRUE  1
@@ -69,6 +70,7 @@ typedef struct player
 {
     float xpos, ypos;
     char name[80];
+    int active;
 
     IPaddress *ip;
     TCPsocket socket;
@@ -118,6 +120,7 @@ void set_tile( layer *lay, int xpos, int ypos, int index );
 int get_tile( layer *lay, int xpos, int ypos );
 void load_map( char *filename );
 layer *get_player_layer();
+layer *get_obs_layer();
 layer *create_layer( int width, int height );
 
 /* draw_map.c */
@@ -144,11 +147,6 @@ void create_save_dialog();
 void open_save_dialog();
 void process_save_dialog();
 
-/* edittools_dialog.c */
-void create_edittool_dialog();
-void open_edittool_dialog();
-void process_edittool_dialog();
-
 /* text.c */
 font_t *load_font( char *texfile, char *widfile );
 //void draw_string( font_t *f, char *text );
@@ -171,16 +169,23 @@ void *gui_get_char_image(int c);
 void gui_get_string_size(char *s, int *width, int *height);
 
 /* net_server.c */
-#define MESG_CHAT   'A'
-#define MESG_TILE   'B'
-void start_server( int port );
+#define MESG_CHAT           'A'     /* Send a line of text for the char buffer.*/
+#define MESG_CONNECT        'B'     /* A client is asking to connect. */
+#define MESG_DISCONNECT     'C'     /* A client wants to disconnect. */
+#define MESG_NEWPLAYER      'D'     /* Notify clients of a new player. */
+#define MESG_PLAYERLEAVE    'E'     /* Notify clients of a disconnected player. */
+
+// v--- Junk messages.
+#define MESG_TILE       'Z'     /* Tell server/client to change a tile at 1+2 to 1*/
+
+void start_server( int port, char *nickname );
 void server_listen();
 int get_server_active();
 
 /* net_client.c */
 void client_listen();
 int get_client_active();
-void connect_to_server( char *host, int port );
+void connect_to_server( char *host, int port, char *nickname );
 TCPsocket get_server_socket();
 
 /* net_common.c */
@@ -191,11 +196,28 @@ char *get_chat_buffer_line( int line );
 void add_chat_buffer_line( char *text );
 int get_chat_buffer_lines();
 void send_chat_message( char *text );
+void send_who_message( TCPsocket socket, char *text );
 
 /* player.c */
 player_t *get_player( int index );
 void set_num_players( int count );
 int get_num_players();
+void set_player_active( int index, int active );
+int get_player_active( int index );
+void set_player_name( int index, char *name );
+char *get_player_name( int index );
+void draw_players();
+void toggle_player_list();
+int get_show_player_list();
+void draw_player_list();
+
+/* editmode.c */
+#define EDITING_PLAYER_LAYER    0
+#define EDITING_OBS_LAYER       1
+int get_editmode();
+int get_editing();
+void set_editing( int edit );
+void draw_edit_widgets();
 
 /* Dialogs. */
 void show_title_dialog( int modal );

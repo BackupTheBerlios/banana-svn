@@ -5,20 +5,7 @@ texture_t mouse_cursor;
 
 void process_mouse()
 {
-    SDL_PumpEvents(); 
-
-    if( SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(1) )
-    {        
-        if ( get_tile(get_player_layer(), (get_camera_x()+get_mouse_x())/32, (get_camera_y()+get_mouse_y())/32 ) !=1 )
-        {
-           // printf( "Tile changed!\n" );
-            set_tile(get_player_layer(), (get_camera_x()+get_mouse_x())/32, (get_camera_y()+get_mouse_y())/32, 1);
-
-            /* TEMporary!!!*/
-            net_change_tile( (get_camera_x()+get_mouse_x())/32, (get_camera_y()+get_mouse_y())/32 );
-            /* ----^ Temporary!! */
-        }
-    }    
+  
 }
 
 void load_mouse_cursor( char *filename )

@@ -1,18 +1,19 @@
 
 #include "main.h"
 
-static char client_ip[80];
-static int client_port;
-
 static gg_colour_t col_trans =
-    {
-        0.0f, 0.0f, 0.0f, 0.0f
-    };
+{
+    1.0f, 1.0f, 1.0f, 0.0f
+};
 
 static gg_colour_t col_white =
-    {
-        1.0f, 1.0f, 1.0f, 1.0f
-    };
+{
+    1.0f, 1.0f, 1.0f, 1.0f
+};
+
+static char client_ip[80];
+static int client_port;
+static char client_nickname[80];
 
 static void close(gg_widget_t *widget, void *data)
 {
@@ -22,7 +23,6 @@ static void close(gg_widget_t *widget, void *data)
 static void ip_changed(gg_widget_t *widget, void *data)
 {
     gg_entry_t *entry=GG_ENTRY(widget);
-    //printf( "IP changed to %s\n", entry->text );
 
     sprintf(client_ip,"%s", entry->text );
 }
@@ -30,14 +30,20 @@ static void ip_changed(gg_widget_t *widget, void *data)
 static void port_changed(gg_widget_t *widget, void *data)
 {
     gg_entry_t *entry=GG_ENTRY(widget);
-    //printf( "Port changed to %s\n", entry->text );
 
     client_port=atoi(entry->text);
 }
 
+static void nick_changed(gg_widget_t *widget, void *data)
+{
+    gg_entry_t *entry=GG_ENTRY(widget);
+
+    strcpy(client_nickname,entry->text);
+}
+
 static void start(gg_widget_t *widget, void *data)
 {
-    connect_to_server(client_ip,client_port);
+    connect_to_server(client_ip,client_port,client_nickname);
     gg_dialog_close();
 }
 
@@ -77,6 +83,15 @@ static gg_dialog_t *create_client_dialog( int modal )
     gg_container_append(GG_CONTAINER(hbox), widget);
     gg_container_append(GG_CONTAINER(vbox), hbox);
 
+    hbox=gg_hbox_create(0);
+    widget = gg_label_create("Nickname: ");
+    gg_label_set_colour(GG_LABEL(widget), &col_white, &col_trans );
+    gg_container_append(GG_CONTAINER(hbox), widget);
+    widget = gg_entry_create();
+    gg_entry_set_change_callback(GG_ENTRY(widget), nick_changed, NULL); 
+    gg_container_append(GG_CONTAINER(hbox), widget);
+    gg_container_append(GG_CONTAINER(vbox), hbox);
+
     widget = gg_label_create("Connect to server.");
     gg_label_set_colour(GG_LABEL(widget), &col_white, &col_trans );
     gg_container_append(GG_CONTAINER(vbox), widget);
@@ -92,7 +107,9 @@ static gg_dialog_t *create_client_dialog( int modal )
 
 void show_client_dialog( int modal )
 {
-    if (modal)
-        grab_framebuffer();     
-    gg_dialog_open(create_client_dialog(modal));
+    //if (modal)
+        //grab_framebuffer();    
+ 
+    if (!gg_dialog_current())
+        gg_dialog_open(create_client_dialog(modal));
 }

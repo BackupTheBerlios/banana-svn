@@ -1,13 +1,13 @@
 
 #include "main.h"
 
-texture_t SDL_GL_LoadTexture(SDL_Surface *surface, SDL_Rect *area, int alpha);
-texture_t framebuffer_grab;
-
 static gg_colour_t col_black =
 {
     0.0f, 0.0f, 0.0f, 1.0f
 };
+
+texture_t SDL_GL_LoadTexture(SDL_Surface *surface, SDL_Rect *area, int alpha);
+texture_t framebuffer_grab;
 
 texture_t *get_framebuffer_grab()
 {

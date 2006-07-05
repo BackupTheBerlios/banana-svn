@@ -2,6 +2,7 @@
 #include "main.h"
 
 layer *player_layer;
+layer *obs_layer;
 
 int get_tile( layer *lay, int xpos, int ypos )
 {
@@ -22,11 +23,17 @@ void load_map( char *filename )
 {
     /* temporary */
     player_layer = create_layer( 30, 20 );
+    obs_layer = create_layer( 30, 20 );
 }
 
 layer *get_player_layer()
 {
     return player_layer;
+}
+
+layer *get_obs_layer()
+{
+    return obs_layer;
 }
 
 layer *create_layer( int width, int height )

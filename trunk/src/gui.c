@@ -7,16 +7,6 @@ texture_t menu_border[9];
 int gui_transition=FALSE;
 float gui_transition_inc=0.0f;
 
-static gg_colour_t col_blue_solid =
-{
-    0.0f, 1.0f, 1.0f, 1.0f
-};
-
-static gg_colour_t col_black =
-{
-    0.0f, 0.0f, 0.0f, 1.0f
-};
-
 void draw_glow( int x, int y, int width, int height, int glow_width, gg_colour_t *col, int middle )
 {
     gg_colour_t solid =
@@ -267,10 +257,6 @@ void init_gui()
 
     for (i = 0; i < 9; i++)
         style_menu.border.textured.image[i] = &menu_border[i];
-
-    /*style_menu.border.plain.border=5;
-    style_menu.border.plain.border_col=gg_colour(0.0f, 0.0f, 0.0f, 1.0f);
-    style_menu.border.plain.bg_col=gg_colour(1.0f, 1.0f, 1.0f, 1.0f);*/
 }
 
 gg_event_t convert_event(SDL_Event *event)
@@ -375,9 +361,6 @@ gg_event_t convert_event(SDL_Event *event)
         gg_event.mouse.y = event->button.y;
         break;
     }
-
-    /*    if ((event->type == SDL_KEYDOWN) && (event->key.keysym.unicode <= 0xff))
-            gg_event.key = event->key.keysym.unicode;*/
 
     return gg_event;
 }

@@ -148,7 +148,7 @@ void draw_border(void *image[9], gg_rect_t area, int size)
 
     dest.x = area.x + size;
     dest.y = area.y;
-    dest.width = area.width - 2 * size;
+    dest.width = area.width - (2*size)+1;
     dest.height = size;
     gg_system_draw_image(image[1], source, dest, GG_MODE_TILE, GG_MODE_SCALE, &col_white, FALSE);
     dest.y += area.height - size;
@@ -157,7 +157,7 @@ void draw_border(void *image[9], gg_rect_t area, int size)
     dest.x = area.x;
     dest.y = area.y + size;
     dest.width = size;
-    dest.height = area.height - 2 * size;
+    dest.height = area.height - (2*size)+1;
     gg_system_draw_image(image[3], source, dest, GG_MODE_SCALE, GG_MODE_TILE, &col_white, FALSE);
     dest.x += area.width - size;
     gg_system_draw_image(image[5], source, dest, GG_MODE_SCALE, GG_MODE_TILE, &col_white, FALSE);

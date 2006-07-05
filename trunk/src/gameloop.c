@@ -5,13 +5,6 @@ void process_sdl_events();
 
 void gameloop()
 {
-    /* printf( "Mouse is at %i,%i\n", get_mouse_x(), get_mouse_y() ); 
-
-    if ( get_active_dialog() != NULL )
-        printf( "Dialog open: %s\n", get_active_dialog()->title );
-    else
-        printf( "Dialog open: None\n" ); */
-
     if ( get_server_active() )
         server_listen();
 
@@ -26,47 +19,102 @@ void process_sdl_events()
 {
     SDL_Event event;
     SDL_Surface *screen=SDL_GetVideoSurface();
+    SDL_PumpEvents(); 
+    Uint8 *keystate = SDL_GetKeyState(NULL);
 
-    if (!gg_dialog_current())
+    /* Editing */
+    if (get_editing())
     {
-        //printf( "No dialog mouse bit\n" );
-        process_mouse();
+        /* Camera controls */
+        if ( keystate[SDLK_LEFT] )
+           set_camera( get_camera_x()-10, get_camera_y() );
+        if ( keystate[SDLK_RIGHT] )
+           set_camera( get_camera_x()+10, get_camera_y() );
+        if ( keystate[SDLK_UP] )
+           set_camera( get_camera_x(), get_camera_y()-10 );
+        if ( keystate[SDLK_DOWN] )
+           set_camera( get_camera_x(), get_camera_y()+10 );
+
+        /* Mouse */
+        if( SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(1) )
+        {        
+            if ( get_tile(get_player_layer(), (get_camera_x()+get_mouse_x())/32, (get_camera_y()+get_mouse_y())/32 ) !=1 )
+            {
+                set_tile(get_player_layer(), (get_camera_x()+get_mouse_x())/32, (get_camera_y()+get_mouse_y())/32, 1);
+    
+                /* TEMporary!!!*/
+                net_change_tile( (get_camera_x()+get_mouse_x())/32, (get_camera_y()+get_mouse_y())/32 );
+                /* ----^ Temporary!! */
+            }
+        }
     }
 
-    if (!gg_dialog_current())
-    {
-        //printf( "No dialog keyboard bit\n" );
-        process_keyboard();
-    }
+    /* Show player list? */
+    if ( keystate[SDLK_TAB] )
+        set_show_player_list(TRUE);
+    else
+        set_show_player_list(FALSE);     
 
     while ( SDL_PollEvent( &event ) )
     {
         gg_event_t gg_event;
         
-        /* Mouse! */
-        if (event.type == SDL_MOUSEMOTION)
+        /* GameGUI active? */
+        if ( gg_dialog_current() )
         {
-           // printf( "Dialog mouse bit\n" );
-            gg_dialog_t *dialog = gg_dialog_current();
-            if (dialog)
-                gg_dialog_mouse_movement(dialog, event.motion.x, event.motion.y);
-        }
-
-        /* Keyboard! */
-        if (gg_dialog_current())
-        {
-           // printf( "Dialog keyboard bit\n" );
-            gg_event = convert_event(&event);
-
-            if (gg_event.type != GG_EVENT_NONE) 
+            /* Mouse */
+            if (event.type == SDL_MOUSEMOTION)
             {
-                if (gg_dialog_current())
-                    gg_dialog_input_current(gg_event);
+                // printf( "Dialog mouse bit\n" );
+                gg_dialog_t *dialog = gg_dialog_current();               
+                gg_dialog_mouse_movement(dialog, event.motion.x, event.motion.y);
+            }
+
+            /* Keyboard! */
+            if (gg_dialog_current())
+            {
+                gg_event = convert_event(&event);
+
+                if (gg_event.type != GG_EVENT_NONE) 
+                {
+                    if (gg_dialog_current())
+                        gg_dialog_input_current(gg_event);
+                }
             }
         }
 
+        /* global events */
         switch( event.type )
         {    
+            case SDL_KEYDOWN:
+                switch ( event.key.keysym.sym )
+                {
+                    case SDLK_ESCAPE: /* Quit */
+                        quit(0);
+                        break;
+                    case SDLK_s: /* Open server dialog */
+                        show_server_dialog(FALSE);
+                        break;
+                    case SDLK_c: /* Open clients dialog */
+                        show_client_dialog(FALSE);
+                        break;
+                    case SDLK_t: /* Open chat dialog */
+                        show_chat_dialog(FALSE);
+                        break;
+                    case SDLK_e: /* Toggle edit mode */
+                        if (!gg_dialog_current())
+                        {
+                            if (get_editing())
+                                set_editing(FALSE);
+                            else
+                                set_editing(TRUE);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                break;
+
             case SDL_VIDEORESIZE:
                 screen = SDL_SetVideoMode( event.resize.w, event.resize.h, 
                     SCREEN_BPP, get_videoflags() );
@@ -78,8 +126,7 @@ void process_sdl_events()
 				}
 			    resize_window( event.resize.w, event.resize.h );
 			    break;
-			case SDL_QUIT:
-			    /* handle quit requests */
+			case SDL_QUIT: /* handle quit requests */
 			    quit(0);
 			    break;
 			default:

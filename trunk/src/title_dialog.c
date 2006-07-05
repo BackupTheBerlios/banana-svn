@@ -1,15 +1,15 @@
 
 #include "main.h"
 
-static gg_colour_t col_trans =
-    {
-        0.0f, 0.0f, 0.0f, 0.0f
-    };
-
 static gg_colour_t col_white =
-    {
-        1.0f, 1.0f, 1.0f, 1.0f
-    };
+{
+    1.0f, 1.0f, 1.0f, 1.0f
+};
+
+static gg_colour_t col_trans =
+{
+    1.0f, 1.0f, 1.0f, 0.0f
+};
 
 static void kaboomy(gg_widget_t *widget, void *data)
 {

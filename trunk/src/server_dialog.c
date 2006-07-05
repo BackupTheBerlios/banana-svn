@@ -1,17 +1,18 @@
 
 #include "main.h"
 
-static int server_port;
+static gg_colour_t col_white =
+{
+    1.0f, 1.0f, 1.0f, 1.0f
+};
 
 static gg_colour_t col_trans =
-    {
-        0.0f, 0.0f, 0.0f, 0.0f
-    };
+{
+    1.0f, 1.0f, 1.0f, 0.0f
+};
 
-static gg_colour_t col_white =
-    {
-        1.0f, 1.0f, 1.0f, 1.0f
-    };
+static int server_port;
+char server_name[80];
 
 static void close(gg_widget_t *widget, void *data)
 {
@@ -20,7 +21,7 @@ static void close(gg_widget_t *widget, void *data)
 
 static void start(gg_widget_t *widget, void *data)
 {
-    start_server( server_port );
+    start_server( server_port, server_name );
     gg_dialog_close();
 }
 
@@ -30,6 +31,14 @@ static void port_changed(gg_widget_t *widget, void *data)
     //printf( "Port changed to %s\n", entry->text );
 
     server_port=atoi(entry->text);
+}
+
+static void name_changed(gg_widget_t *widget, void *data)
+{
+    gg_entry_t *entry=GG_ENTRY(widget);
+    //printf( "Port changed to %s\n", entry->text );
+
+    strcpy(server_name,entry->text);
 }
 
 static gg_dialog_t *create_server_dialog( int modal )
@@ -59,6 +68,15 @@ static gg_dialog_t *create_server_dialog( int modal )
     gg_container_append(GG_CONTAINER(hbox), widget);
     gg_container_append(GG_CONTAINER(vbox), hbox);
 
+    hbox = gg_hbox_create(0);      
+    widget = gg_label_create("Nickname: ");
+    gg_label_set_colour(GG_LABEL(widget), &col_white, &col_trans );
+    gg_container_append(GG_CONTAINER(hbox), widget);
+    widget = gg_entry_create();
+    gg_entry_set_change_callback(GG_ENTRY(widget), name_changed, NULL); 
+    gg_container_append(GG_CONTAINER(hbox), widget);
+    gg_container_append(GG_CONTAINER(vbox), hbox);
+
     widget = gg_label_create("Start server.");
     gg_label_set_colour(GG_LABEL(widget), &col_white, &col_trans );
     gg_container_append(GG_CONTAINER(vbox), widget);
@@ -74,7 +92,9 @@ static gg_dialog_t *create_server_dialog( int modal )
 
 void show_server_dialog( int modal )
 {
-    if (modal)
-        grab_framebuffer();     
-    gg_dialog_open(create_server_dialog(modal));
+   // if (modal)
+   //     grab_framebuffer();    
+ 
+    if (!gg_dialog_current())
+        gg_dialog_open(create_server_dialog(modal));
 }
