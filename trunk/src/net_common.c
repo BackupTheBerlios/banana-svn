@@ -4,6 +4,22 @@
 char chat_buffer[CHAT_LINES][80];
 int chat_buffer_lines=0;
 
+void send_playermoved_message( int index, int xpos, int ypos )
+{
+    char buffer[512];
+    unsigned int cxpos=xpos;
+    unsigned int cypos=ypos;
+
+   // printf( "%i,%i\n", xpos, ypos );
+
+    buffer[0]=MESG_PLAYERMOVED;
+    buffer[1]=index;
+    memcpy(buffer+2,&cxpos,sizeof(int));
+    memcpy(buffer+6,&cypos,sizeof(int));
+
+    send_message_omit( buffer[1], &buffer, 10 );
+}
+
 int get_chat_buffer_lines()
 {
     return chat_buffer_lines;
@@ -53,6 +69,37 @@ void send_chat_message( char *text )
     strcpy(buffer+1,text);
 
     send_message( &buffer, strlen(text)+1 );
+}
+
+void send_message_omit( int omited_index, char *buffer, int len )
+{
+    int i=0;
+
+    if (get_server_active())
+    {
+        /* Server running. Send message to all connected clients */
+        for (i=1;i<MAX_PLAYERS;i++)
+        {
+            if (get_player_active(i) && i!=omited_index)
+            {
+                if (SDLNet_TCP_Send(get_client_socket(i), (void *)buffer, 512) < len)
+          	    {
+          		    printf( "SDLNet_TCP_Send: %s\n", SDLNet_GetError());
+           		    exit(EXIT_FAILURE);
+           	    }
+            }
+        }
+
+    }
+    else if (get_client_active())
+    {
+        /* Client active. Send message to server */
+        if (SDLNet_TCP_Send(get_server_socket(), (void *)buffer, 512) < len)
+  	    {
+  		    printf( "SDLNet_TCP_Send: %s\n", SDLNet_GetError());
+   		    exit(EXIT_FAILURE);
+   	    }
+    }
 }
 
 void send_message( char *buffer, int len )

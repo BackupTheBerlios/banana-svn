@@ -21,6 +21,7 @@ void process_sdl_events()
     SDL_Surface *screen=SDL_GetVideoSurface();
     SDL_PumpEvents(); 
     Uint8 *keystate = SDL_GetKeyState(NULL);
+    int player_moved=FALSE;
 
     /* Editing */
     if (get_editing())
@@ -47,6 +48,35 @@ void process_sdl_events()
                 /* ----^ Temporary!! */
             }
         }
+    }
+
+    /* temporary.. move player.. */
+    if ( keystate[SDLK_LEFT] )
+    {
+        move_player( get_local_player_index(), -5.0f, 0.0f );
+        player_moved=TRUE;
+    }
+    else if ( keystate[SDLK_RIGHT] )
+    {
+        move_player( get_local_player_index(), 5.0f, 0.0f );
+        player_moved=TRUE;
+    }
+    if ( keystate[SDLK_UP] )
+    {
+        move_player( get_local_player_index(), 0.0f, -5.0f );
+        player_moved=TRUE;
+    }
+    else if ( keystate[SDLK_DOWN] )
+    {
+        move_player( get_local_player_index(), 0.0f, 5.0f );
+        player_moved=TRUE;
+    }
+
+    if ( player_moved )
+    {   
+        send_playermoved_message( get_local_player_index(), 
+            (int)get_player(get_local_player_index())->xpos, 
+            (int)get_player(get_local_player_index())->ypos );
     }
 
     /* Show player list? */

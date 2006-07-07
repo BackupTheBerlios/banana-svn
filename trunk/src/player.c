@@ -5,6 +5,31 @@ int num_players=0;
 player_t players[16];
 int show_player_list=FALSE;
 
+texture_t player;
+
+int get_local_player_index()
+{
+    int retval;
+
+    if ( get_server_active() )
+        retval=0;
+    else
+        retval=get_client_slot();
+
+    return retval;
+}
+
+void move_player( int index, float xinc, float yinc )
+{
+    players[index].xpos+=xinc;
+    players[index].ypos+=yinc;
+}
+
+void load_player_tex()
+{
+    load_texture( &player, "./data/player_temp.png", TRUE );
+}
+
 static gg_colour_t col_white =
 {
     1.0f, 1.0f, 1.0f, 1.0f
@@ -101,6 +126,34 @@ char *get_player_name( int index )
     return players[index].name;
 }
 
+void draw_player( int index )
+{
+    glEnable( GL_TEXTURE_2D );
+    glBindTexture( GL_TEXTURE_2D, player.gl_index );
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glTranslatef( players[index].xpos, players[index].ypos, 0.0f );
+
+    glBegin( GL_QUADS ); 
+        glTexCoord2f( 0.0f, 0.0f ); /* Top Left */
+        glVertex3f( 0.0f,  0.0f, 0.0f );
+
+        glTexCoord2f( 1.0f, 0.0f ); /* Top Right */
+        glVertex3f( 128, 0.0f, 0.0f );
+
+        glTexCoord2f( 1.0f, 1.0f ); /* Bottom Right */
+        glVertex3f( 128, 128,  0.0f );
+
+        glTexCoord2f( 0.0f, 1.0f ); /* Bottom Left */
+        glVertex3f( 0.0f,  128,  0.0f );
+    glEnd( ); 
+
+    glDisable( GL_BLEND );
+    glDisable( GL_TEXTURE_2D );
+}
+
 void draw_players()
 {
     int i=0;
@@ -109,7 +162,15 @@ void draw_players()
     {
         if ( players[i].active )
         {
-            //printf( "Drawing player %i.\n", i );
+            glPushMatrix();
+            // draw face..
+            draw_player( i );
+            // draw name..
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            gg_system_draw_string(players[i].name, 0, 0, &col_white, 0, 0, 0);
+            glDisable( GL_BLEND );
+            glPopMatrix();
         }
     }
 }

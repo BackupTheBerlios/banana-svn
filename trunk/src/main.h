@@ -169,11 +169,13 @@ void *gui_get_char_image(int c);
 void gui_get_string_size(char *s, int *width, int *height);
 
 /* net_server.c */
-#define MESG_CHAT           'A'     /* Send a line of text for the char buffer.*/
-#define MESG_CONNECT        'B'     /* A client is asking to connect. */
-#define MESG_DISCONNECT     'C'     /* A client wants to disconnect. */
-#define MESG_NEWPLAYER      'D'     /* Notify clients of a new player. */
-#define MESG_PLAYERLEAVE    'E'     /* Notify clients of a disconnected player. */
+#define MESG_CHAT            'A'     /* Send a line of text for the char buffer.*/
+#define MESG_CONNECT         'B'     /* A client is asking to connect. */
+#define MESG_DISCONNECT      'C'     /* A client wants to disconnect. */
+#define MESG_NEWPLAYER       'D'     /* Notify clients of a new player. */
+#define MESG_PLAYERLEAVE     'E'     /* Notify clients of a disconnected player. */
+#define MESG_PLAYERMOVED     'F'     /* Tell a server/client that a player has moved */
+#define MESG_WHICHSLOT       'G'     /* Tell the client which slot it is */
 
 // v--- Junk messages.
 #define MESG_TILE       'Z'     /* Tell server/client to change a tile at 1+2 to 1*/
@@ -187,16 +189,19 @@ void client_listen();
 int get_client_active();
 void connect_to_server( char *host, int port, char *nickname );
 TCPsocket get_server_socket();
+int get_client_slot();
 
 /* net_common.c */
 #define CHAT_LINES 5
 void send_message( char *buffer, int len );
+void send_message_omit( int omited_index, char *buffer, int len );
 void net_change_tile( int x, int y );
 char *get_chat_buffer_line( int line );
 void add_chat_buffer_line( char *text );
 int get_chat_buffer_lines();
 void send_chat_message( char *text );
 void send_who_message( TCPsocket socket, char *text );
+void send_playermove_message( int index, int xpos, int ypos );
 
 /* player.c */
 player_t *get_player( int index );
@@ -210,6 +215,9 @@ void draw_players();
 void toggle_player_list();
 int get_show_player_list();
 void draw_player_list();
+void load_player_tex();
+void move_player( int index, float xinc, float yinc );
+int get_local_player_index();
 
 /* editmode.c */
 #define EDITING_PLAYER_LAYER    0

@@ -11,6 +11,8 @@ int main()
     load_mouse_cursor( "data/mouse_cursor.png" );
     load_fonts();
     init_gui();
+    /* temp! */
+    load_player_tex();
 
     set_camera( 0.0f, 0.0f );
 

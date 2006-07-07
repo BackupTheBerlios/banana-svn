@@ -8,6 +8,7 @@
 */
 
 static int client_active;
+static int client_slot;
 
 static TCPsocket server_socket;
 static IPaddress server_ip;
@@ -30,6 +31,11 @@ void net_change_tile( int x, int y )
     send_message( &buffer, 3 );
 }
 /* ^----- TEMPORARY!!! ----^ */
+
+int get_client_slot()
+{
+    return client_slot;
+}
 
 TCPsocket get_server_socket()
 {
@@ -88,6 +94,10 @@ void client_listen()
        		{
                 switch( buffer[0] )
                 {
+                    case MESG_WHICHSLOT:
+                        client_slot=buffer[1];
+                        printf( "Server says slot %i\n", client_slot );
+                        break;
                     case MESG_CHAT:
                         add_chat_buffer_line( buffer+1 );
                         //printf( "Chat message\n" );
@@ -98,6 +108,11 @@ void client_listen()
                         strcpy(get_player(buffer[1])->name,buffer+2);
                         set_player_active(buffer[1],TRUE);
                         printf( "New player:(%i)%s\n", buffer[1], buffer+2 );
+                        break;
+                    case MESG_PLAYERMOVED:
+                        //printf( "From server: slot %i moved to %i,%i\n", buffer[1], *(int *)(buffer+2), *(int *)(buffer+6) );
+                        get_player(buffer[1])->xpos=*(int *)(buffer+2);
+                        get_player(buffer[1])->ypos=*(int *)(buffer+6);
                         break;
                     case MESG_TILE:
                         //printf( "Tile message\n" );

@@ -137,31 +137,6 @@ void draw_texture(texture_t *texture, gg_rect_t source, gg_rect_t dest, int mode
     glPopMatrix();
 }
 
-#ifdef FART
-/*void draw_texture( texture_t *texture )
-{
-    glEnable( GL_TEXTURE_2D );
-    glBindTexture( GL_TEXTURE_2D, texture->gl_index );
-
-    /* Draw a tile.. */
-    glBegin( GL_QUADS ); 
-        glTexCoord2f( 0.0f, 0.0f ); /* Top Left */
-        glVertex3f( 0.0f,  0.0f, 0.0f );
-
-        glTexCoord2f( 1.0f, 0.0f ); /* Top Right */
-        glVertex3f( texture->width, 0.0f, 0.0f );
-
-        glTexCoord2f( 1.0f, 1.0f ); /* Bottom Right */
-        glVertex3f( texture->width, texture->height,  0.0f );
-
-        glTexCoord2f( 0.0f, 1.0f ); /* Bottom Left */
-        glVertex3f( 0.0f,  texture->height,  0.0f );
-    glEnd( ); 
-
-    glDisable( GL_TEXTURE_2D );
-}*/
-#endif
-
 void load_texture( texture_t *texture, char *filename, int alpha )
 {
     /* Create storage space for the texture */
