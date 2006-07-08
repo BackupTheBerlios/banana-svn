@@ -22,8 +22,8 @@ void set_tile( layer *lay, int xpos, int ypos, int index )
 void load_map( char *filename )
 {
     /* temporary */
-    player_layer = create_layer( 30, 20 );
-    obs_layer = create_layer( 30, 20 );
+    player_layer = create_layer( 5, 5 );
+    obs_layer = create_layer( 5, 5 );
 }
 
 layer *get_player_layer()
@@ -52,7 +52,7 @@ layer *create_layer( int width, int height )
     temp->height=height;
 
     for (i=0; i<width*height; i++ )
-        temp->tiles[i]=8;
+        temp->tiles[i]=0;
 
     return temp;    
 }

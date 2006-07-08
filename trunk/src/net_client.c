@@ -89,6 +89,7 @@ void client_listen()
         {
       		if (SDLNet_TCP_Recv(server_socket, buffer, 512))
        		{
+                *get_pps_in()=*get_pps_in()+1;
                 switch( buffer[0] )
                 {
                     case MESG_WHICHSLOT:
@@ -101,6 +102,7 @@ void client_listen()
                     case MESG_NEWPLAYER:
                         strcpy(get_player(buffer[1])->name,buffer+2);
                         set_player_active(buffer[1],TRUE);
+                        set_num_players(get_num_players()+1);
                         printf( "New player:(%i)%s\n", buffer[1], buffer+2 );
                         break;
                     case MESG_PLAYERMOVED:

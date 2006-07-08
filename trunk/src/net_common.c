@@ -3,6 +3,18 @@
 
 char chat_buffer[CHAT_LINES][80];
 int chat_buffer_lines=0;
+int pps_in=0;
+int pps_out=0;
+
+int *get_pps_in()
+{
+    return &pps_in;
+}
+
+int *get_pps_out()
+{
+    return &pps_out;
+}
 
 void send_playermoved_message( int index, int xpos, int ypos )
 {
@@ -74,6 +86,7 @@ void send_message_omit( int omited_index, char *buffer, int len )
           		    printf( "SDLNet_TCP_Send: %s\n", SDLNet_GetError());
            		    exit(EXIT_FAILURE);
            	    }
+                pps_out++;
             }
         }
 
@@ -86,6 +99,7 @@ void send_message_omit( int omited_index, char *buffer, int len )
   		    printf( "SDLNet_TCP_Send: %s\n", SDLNet_GetError());
    		    exit(EXIT_FAILURE);
    	    }
+        pps_out++;
     }
 }
 
@@ -105,6 +119,7 @@ void send_message( char *buffer, int len )
           		    printf( "SDLNet_TCP_Send: %s\n", SDLNet_GetError());
            		    exit(EXIT_FAILURE);
            	    }
+                pps_out++;
             }
         }
 
@@ -117,5 +132,6 @@ void send_message( char *buffer, int len )
   		    printf( "SDLNet_TCP_Send: %s\n", SDLNet_GetError());
    		    exit(EXIT_FAILURE);
    	    }
+        pps_out++;
     }
 }

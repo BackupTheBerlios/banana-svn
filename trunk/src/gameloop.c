@@ -56,22 +56,22 @@ void process_sdl_events()
     /* temporary.. move player.. */
     if ( keystate[SDLK_LEFT] )
     {
-        move_player( get_local_player_index(), -5.0f, 0.0f );
+        move_player( get_local_player_index(), -5.0f * PLAYER_MOVE_SPEED, 0.0f );
         player_moved=TRUE;
     }
     else if ( keystate[SDLK_RIGHT] )
     {
-        move_player( get_local_player_index(), 5.0f, 0.0f );
+        move_player( get_local_player_index(), 5.0f * PLAYER_MOVE_SPEED, 0.0f );
         player_moved=TRUE;
     }
     if ( keystate[SDLK_UP] )
     {
-        move_player( get_local_player_index(), 0.0f, -5.0f );
+        move_player( get_local_player_index(), 0.0f, -5.0f * PLAYER_MOVE_SPEED );
         player_moved=TRUE;
     }
     else if ( keystate[SDLK_DOWN] )
     {
-        move_player( get_local_player_index(), 0.0f, 5.0f );
+        move_player( get_local_player_index(), 0.0f, 5.0f * PLAYER_MOVE_SPEED );
         player_moved=TRUE;
     }
 

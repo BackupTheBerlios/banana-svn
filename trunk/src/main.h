@@ -15,8 +15,13 @@
 #define SCREEN_WIDTH  640
 #define SCREEN_HEIGHT 480
 #define SCREEN_BPP     32
+#define FPS 9999
 
 #define MAX_PLAYERS    16
+
+/* TEMPORARY */
+#define PLAYER_MOVE_SPEED (60 / get_fps())
+/* TEMPORARY */
 
 /* Define our booleans */
 #define TRUE  1
@@ -89,6 +94,7 @@ void gameloop();
 
 /* scene.c */
 void render_scene();
+float get_fps();
 
 /* init.c */
 void resize_window( int width, int height );
@@ -196,6 +202,8 @@ int get_chat_buffer_lines();
 void send_chat_message( char *text );
 void send_who_message( TCPsocket socket, char *text );
 void send_playermoved_message( int index, int xpos, int ypos );
+int *get_pps_in();
+int *get_pps_out();
 
 /* player.c */
 player_t *get_player( int index );

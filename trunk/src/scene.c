@@ -13,11 +13,30 @@ static gg_colour_t col_white =
     1.0f, 1.0f, 1.0f, 1.0f
 };
 
+static gg_colour_t col_red =
+{
+    1.0f, 0.0f, 0.0f, 1.0f
+};
+
+static int fps_enabled = 0;
+static int frames = 0;
+static Uint32 fps_time = 0;
+static float fps;
+
+float get_fps()
+{
+    return fps;
+}
+
 /* Render the scene */
 void render_scene()
 {
     gg_dialog_t *dialog;
+    static Uint32 last = 0;
+    Uint32 now;
     int i;
+
+    fps_enabled=TRUE;
 
     /* Clean up any GameGUI dialogs */
     gg_dialog_cleanup();
@@ -81,6 +100,40 @@ void render_scene()
         glPopMatrix();
     }
 
+    /* Draw the FPS if enabled */
+    if (fps_enabled)
+    {
+        char fps_s[80];
+
+        glPushMatrix();
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
+        sprintf(fps_s, "FPS: %.2f", fps);
+        gg_system_draw_string(fps_s, 5, 5, &col_red, 0, 0, 0);
+        glTranslatef(0.0f,17.0f,0.0f);
+        sprintf(fps_s, "Net In: %i", *get_pps_in());
+        gg_system_draw_string(fps_s, 5, 5, &col_red, 0, 0, 0);
+        glTranslatef(0.0f,17.0f,0.0f);
+        sprintf(fps_s, "Net Out: %i", *get_pps_out());
+        gg_system_draw_string(fps_s, 5, 5, &col_red, 0, 0, 0);
+        glDisable(GL_BLEND);
+        glPopMatrix();
+    }
+
     /* Swap the buffers. */
     SDL_GL_SwapBuffers();
+
+    /* FPS stuff.. */
+    now = SDL_GetTicks();
+    if (now - last < 1000 / FPS)
+        SDL_Delay(1000 / FPS - (now - last));
+    last = SDL_GetTicks();
+
+    frames++;
+    if (frames == 10)
+    {
+        fps = 10000 / (float) (last - fps_time);
+        frames = 0;
+        fps_time = last;
+    }
 }

@@ -68,6 +68,8 @@ void server_listen()
         /* Check for new connections */
 		if ((get_player(new_player_slot)->socket = SDLNet_TCP_Accept(listen_socket)))
 		{
+            *get_pps_in()=*get_pps_in()+1;
+
             printf( "New player.\n" );
 
 			if ((get_player(new_player_slot)->ip = SDLNet_TCP_GetPeerAddress(get_player(new_player_slot)->socket)))
@@ -97,6 +99,7 @@ void server_listen()
                 {                  
             		if (SDLNet_TCP_Recv(get_player(i)->socket, buffer, 512))
             		{
+                        *get_pps_in()=*get_pps_in()+1;
                         switch( buffer[0] )
                         {
                             case MESG_PLAYERMOVED:
