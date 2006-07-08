@@ -33,8 +33,10 @@ char *get_chat_buffer_line( int line )
 void add_chat_buffer_line( char *text )
 {
     int i=0;
+    char temp[512];
 
-    printf( "Got %s:%i\n", text, chat_buffer_lines );
+    //printf( "Got %s:%i\n", text, chat_buffer_lines );
+    sprintf(temp,"%s: %s", get_player(get_local_player_index())->name, text );
 
     if ( chat_buffer_lines > CHAT_LINES-1 )
     {
@@ -45,12 +47,12 @@ void add_chat_buffer_line( char *text )
         {
             strcpy(chat_buffer[i-1],chat_buffer[i]);
         }
-        strcpy(chat_buffer[chat_buffer_lines-1], text);
+        strcpy(chat_buffer[chat_buffer_lines-1], temp);
     }
     else
     {
        // printf( "Grow..\n" );
-        strcpy(chat_buffer[chat_buffer_lines], text);
+        strcpy(chat_buffer[chat_buffer_lines], temp);
 
         chat_buffer_lines++;
     }

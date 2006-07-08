@@ -293,6 +293,9 @@ gg_event_t convert_event(SDL_Event *event)
         case SDLK_RETURN:
             gg_event.key = GG_KEY_ACTION;
             break;
+        case SDLK_BACKSPACE:
+            gg_event.key = GG_KEY_BACKSPACE;
+            break;
         default:
             if (event->key.keysym.unicode <= 0xff)
             {

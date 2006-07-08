@@ -15,7 +15,7 @@
 #define SCREEN_WIDTH  640
 #define SCREEN_HEIGHT 480
 #define SCREEN_BPP     32
-#define TILE_SIZE      32
+
 #define MAX_PLAYERS    16
 
 /* Define our booleans */
@@ -80,9 +80,6 @@ typedef struct player
 int get_videoflags();
 void quit( int returnCode );
 
-/* draw_tile.c */
-void draw_tile( int index );
-
 /* init.c */
 void init_video();
 void init_net();
@@ -97,6 +94,8 @@ void draw_scene();
 void resize_window( int width, int height );
 
 /* texture.c */
+#define NO_ALPHA    0
+#define USE_ALPHA   1
 void load_texture( texture_t *texture, char *filename, int alpha );
 texture_t SDL_GL_LoadTexture(SDL_Surface *surface, SDL_Rect *area, int alpha);
 void grab_framebuffer();
@@ -105,8 +104,10 @@ texture_t *get_framebuffer_grab();
 void draw_texture(texture_t *texture, gg_rect_t source, gg_rect_t dest, int mode_h, int mode_v, gg_colour_t *colour, int effect );
 
 /* tilebay.c */
+#define TILE_SIZE   32
 texture_t *get_tilebay();
 void load_tilebay( char *filename );
+void draw_tile( int index );
 
 /* map.c */
 typedef struct layer

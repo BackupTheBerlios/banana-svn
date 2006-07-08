@@ -52,7 +52,7 @@ layer *create_layer( int width, int height )
     temp->height=height;
 
     for (i=0; i<width*height; i++ )
-        temp->tiles[i]=0;
+        temp->tiles[i]=1;
 
     return temp;    
 }

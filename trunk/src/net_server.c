@@ -23,7 +23,7 @@ int get_server_active()
     return server_active;
 }
 
-void send_whichslot_message( TCPsocket socket, int index )
+void send_whichslot_message( UDPsocket socket, int index )
 {
     char buffer[512];
 
