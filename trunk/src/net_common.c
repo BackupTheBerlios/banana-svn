@@ -10,14 +10,12 @@ void send_playermoved_message( int index, int xpos, int ypos )
     unsigned int cxpos=xpos;
     unsigned int cypos=ypos;
 
-   // printf( "%i,%i\n", xpos, ypos );
-
     buffer[0]=MESG_PLAYERMOVED;
     buffer[1]=index;
     memcpy(buffer+2,&cxpos,sizeof(int));
     memcpy(buffer+6,&cypos,sizeof(int));
 
-    send_message_omit( buffer[1], &buffer, 10 );
+    send_message_omit( buffer[1], buffer, 10 );
 }
 
 int get_chat_buffer_lines()
@@ -33,34 +31,21 @@ char *get_chat_buffer_line( int line )
 void add_chat_buffer_line( char *text )
 {
     int i=0;
-    char temp[512];
-
-    //printf( "Got %s:%i\n", text, chat_buffer_lines );
-    sprintf(temp,"%s: %s", get_player(get_local_player_index())->name, text );
 
     if ( chat_buffer_lines > CHAT_LINES-1 )
     {
-       // printf( "Overlfow..\n" );
-        //chat_buffer_lines=CHAT_LINES;
-
         for (i=1;i<CHAT_LINES;i++)
         {
             strcpy(chat_buffer[i-1],chat_buffer[i]);
         }
-        strcpy(chat_buffer[chat_buffer_lines-1], temp);
+        strcpy(chat_buffer[chat_buffer_lines-1], text);
     }
     else
     {
-       // printf( "Grow..\n" );
-        strcpy(chat_buffer[chat_buffer_lines], temp);
+        strcpy(chat_buffer[chat_buffer_lines], text);
 
         chat_buffer_lines++;
-    }
-
-    for (i=0; i<CHAT_LINES;i++ )
-    {
-       // printf( "[%i] %s\n", i, chat_buffer[i] );
-    }    
+    } 
 }
 
 void send_chat_message( char *text )
@@ -70,7 +55,7 @@ void send_chat_message( char *text )
     buffer[0]=MESG_CHAT;
     strcpy(buffer+1,text);
 
-    send_message( &buffer, strlen(text)+1 );
+    send_message( buffer, strlen(text)+1 );
 }
 
 void send_message_omit( int omited_index, char *buffer, int len )

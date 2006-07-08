@@ -27,7 +27,7 @@ static gg_dialog_t *create_title_dialog( int modal )
     if ( !modal )
     {
         widget = gg_button_create("Quit");
-        gg_action_set_callback(GG_BUTTON(widget), kaboomy, NULL);        
+        gg_button_set_callback(GG_BUTTON(widget), kaboomy, NULL);        
         gg_container_append(GG_CONTAINER(vbox), widget);
         widget = gg_entry_create();
         gg_container_append(GG_CONTAINER(vbox), widget);

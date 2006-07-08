@@ -23,14 +23,14 @@ int get_server_active()
     return server_active;
 }
 
-void send_whichslot_message( UDPsocket socket, int index )
+void send_whichslot_message( TCPsocket socket, int index )
 {
     char buffer[512];
 
     buffer[0]=MESG_WHICHSLOT;
     buffer[1]=index;
 
-    send_message( &buffer, 2 );
+    send_message( buffer, 2 );
 }
 
 void send_newplayer_message( int index )
@@ -42,7 +42,7 @@ void send_newplayer_message( int index )
     strcpy(buffer+2,get_player(index)->name);
     printf( "New player:(%i)%s\n", buffer[1], buffer+2 );
 
-    send_message( &buffer, strlen(get_player(index)->name)+2 );
+    send_message( buffer, strlen(get_player(index)->name)+2 );
 }
 
 void server_listen()
@@ -88,32 +88,25 @@ void server_listen()
         }
 
         num_active_sockets=SDLNet_CheckSockets(client_sockets, 0);
-        //printf( "Num active: %i\n", num_active_sockets );
 
         for (i=0;i<MAX_PLAYERS;i++)
     	{   
             if (get_player_active(i))
             {
                 if (SDLNet_SocketReady(get_player(i)->socket))
-                {
-                   // printf( "Player %i active.\n", i );                    
+                {                  
             		if (SDLNet_TCP_Recv(get_player(i)->socket, buffer, 512))
             		{
                         switch( buffer[0] )
                         {
                             case MESG_PLAYERMOVED:
-                              //  printf( "From client: slot %i moved to %i,%i\n", buffer[1], 
-                              //      *(int *)(buffer+2), *(int*)(buffer+6) );
 
                                 get_player(buffer[1])->xpos=*(int *)(buffer+2);
                                 get_player(buffer[1])->ypos=*(int*)(buffer+6);
                                 send_playermoved_message( buffer[1], *(int *)(buffer+2), *(int *)(buffer+6) );
                                 break;
                             case MESG_CHAT:
-                                //printf( "Chat message\n" );
                                 add_chat_buffer_line( buffer+1 );
-                                //memcpy(chat_buffer, buffer+1, 500);
-                                //printf( "Chat buffer is now: %s\n", chat_buffer );
                                 break;
                             case MESG_CONNECT:
                                 printf( "Client %i's name is %s\n", i, buffer+1 );
@@ -134,7 +127,6 @@ void server_listen()
                             case MESG_TILE:
                                 printf( "Tile message\n" );
                                 set_tile(get_player_layer(), buffer[1], buffer[2], 1);
-                                //printf( "%i,%i\n", buffer[1], buffer[2] );
                                 send_message( buffer, 512 );
                                 break;
                         }
@@ -169,7 +161,7 @@ void start_server( int port, char *nickname )
     if(!client_sockets) 
     {
         printf("SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
-        exit(1); //most of the time this is a major error, but do what you want.
+        exit(1); 
     }
 
     /* Set defaults.. */

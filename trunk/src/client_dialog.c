@@ -58,10 +58,10 @@ static gg_dialog_t *create_client_dialog( int modal )
 
     hbox = gg_hbox_create(0);  
     widget = gg_button_create("Cancel");
-    gg_action_set_callback(GG_BUTTON(widget), close, NULL);        
+    gg_button_set_callback(GG_BUTTON(widget), close, NULL);        
     gg_container_append(GG_CONTAINER(hbox), widget);
     widget = gg_button_create("Start");
-    gg_action_set_callback(GG_BUTTON(widget), start, NULL);        
+    gg_button_set_callback(GG_BUTTON(widget), start, NULL);        
     gg_container_append(GG_CONTAINER(hbox), widget);
     gg_container_append(GG_CONTAINER(vbox), hbox);
 
@@ -107,9 +107,6 @@ static gg_dialog_t *create_client_dialog( int modal )
 
 void show_client_dialog( int modal )
 {
-    //if (modal)
-        //grab_framebuffer();    
- 
     if (!gg_dialog_current())
         gg_dialog_open(create_client_dialog(modal));
 }

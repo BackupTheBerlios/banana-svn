@@ -50,8 +50,6 @@ int gg_button_input(gg_widget_t *widget, gg_event_t event);
 void gg_button_init(gg_button_t *button, gg_widget_t *widget);
 
 gg_widget_t *gg_button_create(char *text);
-//gg_widget_t *gg_button_create(gg_widget_t *widget);
-//gg_widget_t *gg_button_create_with_label(char *text, float xalign, float yalign);
 
 void gg_button_set_callback(gg_button_t *button, void (* callback) (gg_widget_t *, void *), void *func_data);
 

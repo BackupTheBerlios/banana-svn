@@ -1,6 +1,9 @@
+
 /*
     Banana - A multiplayer platform game engine.
-    Copyright(C) 2006, Kris McAulay    
+    Copyright(C) 2006, Kris McAulay  
+
+    tilebay.c - Load and draw tiles. 
 */
 
 #include "main.h"
@@ -10,51 +13,48 @@ texture_t tilebay;
 /* Loads the texture used as the tile bay */
 void load_tilebay( char *filename )
 {
-    /* Load the texture using alpha, needed for the foreground layer. */
+    /* Load the texture using alpha, as it's needed for the foreground layer. */
     load_texture( &tilebay, filename, USE_ALPHA );
 }
 
-/* Draw a tile, centered */
+/* Draw a tile */
 void draw_tile( int index )
 {
     float u1,u2,v1,v2;
+    /* Calculate how many tiles wide the tilebay's texture is */
     float tiles_per_row=(float)(tilebay.width/TILE_SIZE);
 
-    float u1n=0.0f;
-
-    u1n=(float)((index%(int)tiles_per_row)*TILE_SIZE)/tilebay.width;
-
     /* Calculate the u/v value of the specific tile index */
-    u1=index%(int)tiles_per_row; u1=u1*TILE_SIZE;
-    u2=u1+TILE_SIZE;
-    v1=index/(int)tiles_per_row; v1=v1*TILE_SIZE;    
-    v2=v1+TILE_SIZE;
+    u1=(float)((index%(int)tiles_per_row)*TILE_SIZE)/tilebay.width;
+    u2=(float)(((index%(int)tiles_per_row)*TILE_SIZE)+TILE_SIZE)/tilebay.width;
+    v1=(float)((index/(int)tiles_per_row)*TILE_SIZE)/tilebay.height;    
+    v2=(float)(((index/(int)tiles_per_row)*TILE_SIZE)+TILE_SIZE)/tilebay.height;  
 
-    u1=u1/tilebay.width;
-    u2=u2/tilebay.width;
-    v1=v1/tilebay.height;
-    v2=v2/tilebay.height;
-
-    //printf( "u1: %f, u1: %f\n", u1, u1n );
-
-    u1=u1n;
-
+    /* Enable textures */
     glEnable( GL_TEXTURE_2D );
+
+    /* Bind the tilebay texture */
     glBindTexture( GL_TEXTURE_2D, tilebay.gl_index );
 
+    /* Send the vertex/texture coordinates */
     glBegin( GL_QUADS ); 
-        glTexCoord2f( u1, v1 ); /* Top Left */
+        /* Top Left */
+        glTexCoord2f( u1, v1 ); 
         glVertex3f( 0.0f,  0.0f, 0.0f );
 
-        glTexCoord2f( u2, v1 ); /* Top Right */
+        /* Top Right */
+        glTexCoord2f( u2, v1 ); 
         glVertex3f( TILE_SIZE, 0.0f, 0.0f );
 
-        glTexCoord2f( u2, v2 ); /* Bottom Right */
+        /* Bottom Right */
+        glTexCoord2f( u2, v2 ); 
         glVertex3f( TILE_SIZE, TILE_SIZE,  0.0f );
 
-        glTexCoord2f( u1, v2 ); /* Bottom Left */
+        /* Bottom Left */
+        glTexCoord2f( u1, v2 ); 
         glVertex3f( 0.0f,  TILE_SIZE,  0.0f );
-    glEnd( ); 
+    glEnd(); 
 
+    /* Disable textures */
     glDisable( GL_TEXTURE_2D );
 }

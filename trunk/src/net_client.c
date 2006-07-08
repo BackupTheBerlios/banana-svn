@@ -28,7 +28,7 @@ void net_change_tile( int x, int y )
     buffer[1]=x;
     buffer[2]=y;
 
-    send_message( &buffer, 3 );
+    send_message( buffer, 3 );
 }
 /* ^----- TEMPORARY!!! ----^ */
 
@@ -78,18 +78,15 @@ void send_disconnect_message()
 
 void client_listen()
 {
-    //int i=0;
     int num_active_sockets=0;
     char buffer[512];
 
     if (client_active)
     {
         num_active_sockets=SDLNet_CheckSockets(server_sockets, 0);
-      //  printf( "Num sockets: %i\n", num_active_sockets );
     
         if (SDLNet_SocketReady(server_socket))
         {
-            //printf( "Server message recieved.\n" );
       		if (SDLNet_TCP_Recv(server_socket, buffer, 512))
        		{
                 switch( buffer[0] )
@@ -100,9 +97,6 @@ void client_listen()
                         break;
                     case MESG_CHAT:
                         add_chat_buffer_line( buffer+1 );
-                        //printf( "Chat message\n" );
-                        //memcpy(chat_buffer, buffer+1, 500);
-                        //printf( "Chat buffer is now: %s\n", chat_buffer );
                         break;
                     case MESG_NEWPLAYER:
                         strcpy(get_player(buffer[1])->name,buffer+2);
@@ -110,14 +104,11 @@ void client_listen()
                         printf( "New player:(%i)%s\n", buffer[1], buffer+2 );
                         break;
                     case MESG_PLAYERMOVED:
-                        //printf( "From server: slot %i moved to %i,%i\n", buffer[1], *(int *)(buffer+2), *(int *)(buffer+6) );
                         get_player(buffer[1])->xpos=*(int *)(buffer+2);
                         get_player(buffer[1])->ypos=*(int *)(buffer+6);
                         break;
                     case MESG_TILE:
-                        //printf( "Tile message\n" );
                         set_tile(get_player_layer(), buffer[1], buffer[2], 1);
-                        //printf( "%i,%i\n", buffer[1], buffer[2] );
                         break;
                 }
       	    }
@@ -150,7 +141,7 @@ void connect_to_server( char *host, int port, char *nickname )
     if(!server_sockets) 
     {
         printf("SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
-        exit(1); //most of the time this is a major error, but do what you want.
+        exit(1); 
     }
     SDLNet_TCP_AddSocket(server_sockets, server_socket);
 

@@ -12,16 +12,19 @@ void gameloop()
         client_listen();
 
     process_sdl_events();
-    draw_scene();
+    render_scene();
 }
 
 void process_sdl_events()
 {
     SDL_Event event;
+    Uint8 *keystate;
     SDL_Surface *screen=SDL_GetVideoSurface();
-    SDL_PumpEvents(); 
-    Uint8 *keystate = SDL_GetKeyState(NULL);
     int player_moved=FALSE;
+
+    SDL_PumpEvents(); 
+
+    keystate = SDL_GetKeyState(NULL);
 
     /* Editing */
     if (get_editing())
@@ -94,8 +97,7 @@ void process_sdl_events()
         {
             /* Mouse */
             if (event.type == SDL_MOUSEMOTION)
-            {
-                // printf( "Dialog mouse bit\n" );
+            {              
                 gg_dialog_t *dialog = gg_dialog_current();               
                 gg_dialog_mouse_movement(dialog, event.motion.x, event.motion.y);
             }

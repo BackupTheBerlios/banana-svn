@@ -9,8 +9,9 @@ int main( int argc, char *argv[])
     load_map( "data/test.map" );
     load_tilebay( "data/tiles.png" );
     load_mouse_cursor( "data/mouse_cursor.png" );
-    load_fonts();
+    load_font( "data/big_font.png", "data/big_font.wid" );
     init_gui();
+
     /* temp! */
     load_player_tex();
 
@@ -27,7 +28,9 @@ int main( int argc, char *argv[])
 
 void quit( int retcode )
 {
-    send_disconnect_message();
+    if (get_client_active())
+        send_disconnect_message();
+
 	SDLNet_Quit();
     SDL_Quit();
     exit( retcode );

@@ -55,6 +55,8 @@ void gg_entry_set_change_callback(gg_entry_t *entry, void (* callback) (gg_widge
 
 void gg_entry_set_enter_callback(gg_entry_t *entry, void (* callback) (gg_widget_t *, void *), void *func_data);
 
+gg_class_id gg_entry_get_class_id();
+
 gg_widget_t *gg_entry_create();
 
 #endif /* GAMEGUI_ENTRY_H */

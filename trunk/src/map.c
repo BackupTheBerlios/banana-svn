@@ -52,7 +52,34 @@ layer *create_layer( int width, int height )
     temp->height=height;
 
     for (i=0; i<width*height; i++ )
-        temp->tiles[i]=1;
+        temp->tiles[i]=8;
 
     return temp;    
+}
+
+void draw_layer( layer *lay )
+{
+    int i=0, j=0;
+
+    for ( j=0; j<lay->width; j++ )
+    {
+        glPushMatrix();
+        for ( i=0; i<lay->height; i++ )
+        {
+            draw_tile(lay->tiles[(i*lay->width)+j]);
+
+            glPushMatrix();    
+            glTranslatef( 0.0f, 10.0f, 0.0f );
+            glPopMatrix();
+
+            glTranslatef( 0.0f, 32.0f, 0.0f );
+        }
+        glPopMatrix();
+        glTranslatef( 32.0f, 0.0f, 0.0f );
+    }
+}
+
+void draw_map()
+{
+    draw_layer( get_player_layer() );
 }

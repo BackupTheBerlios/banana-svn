@@ -163,9 +163,9 @@ void draw_players()
         if ( players[i].active )
         {
             glPushMatrix();
-            // draw face..
+
             draw_player( i );
-            // draw name..
+
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             gg_system_draw_string(players[i].name, 0, 0, &col_white, 0, 0, 0);

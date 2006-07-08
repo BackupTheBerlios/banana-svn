@@ -62,7 +62,7 @@ typedef struct font
 {
     texture_t characters[96];
     char widths[96];
-    int size;
+    int height;
 
 }font_t;
 
@@ -88,7 +88,7 @@ void init_net();
 void gameloop();
 
 /* scene.c */
-void draw_scene();
+void render_scene();
 
 /* init.c */
 void resize_window( int width, int height );
@@ -100,7 +100,6 @@ void load_texture( texture_t *texture, char *filename, int alpha );
 texture_t SDL_GL_LoadTexture(SDL_Surface *surface, SDL_Rect *area, int alpha);
 void grab_framebuffer();
 texture_t *get_framebuffer_grab();
-//void draw_texture( texture_t *texture );
 void draw_texture(texture_t *texture, gg_rect_t source, gg_rect_t dest, int mode_h, int mode_v, gg_colour_t *colour, int effect );
 
 /* tilebay.c */
@@ -149,16 +148,8 @@ void open_save_dialog();
 void process_save_dialog();
 
 /* text.c */
-font_t *load_font( char *texfile, char *widfile );
-//void draw_string( font_t *f, char *text );
-void draw_string(font_t *font, char *s, int x, int y, gg_colour_t *colour, int bounce, int effect, float align);
-int draw_partial_string( font_t *f, char *text, int xpos, int len );
-void draw_char( font_t *f, char c );
-int get_text_len( font_t *f, char *string );
-int get_text_size( font_t *f );
-void load_fonts();
-font_t *get_big_font();
-font_t *get_small_font();
+void load_font( char *texfile, char *widfile );
+font_t *get_font();
 
 /* gui.c */
 void init_gui();
@@ -178,12 +169,13 @@ void gui_get_string_size(char *s, int *width, int *height);
 #define MESG_PLAYERMOVED     'F'     /* Tell a server/client that a player has moved */
 #define MESG_WHICHSLOT       'G'     /* Tell the client which slot it is */
 
-// v--- Junk messages.
+/* v--- Junk messages. */
 #define MESG_TILE       'Z'     /* Tell server/client to change a tile at 1+2 to 1*/
 
 void start_server( int port, char *nickname );
 void server_listen();
 int get_server_active();
+TCPsocket get_client_socket( int index );
 
 /* net_client.c */
 void client_listen();
@@ -191,6 +183,7 @@ int get_client_active();
 void connect_to_server( char *host, int port, char *nickname );
 TCPsocket get_server_socket();
 int get_client_slot();
+void send_disconnect_message();
 
 /* net_common.c */
 #define CHAT_LINES 5
@@ -202,7 +195,7 @@ void add_chat_buffer_line( char *text );
 int get_chat_buffer_lines();
 void send_chat_message( char *text );
 void send_who_message( TCPsocket socket, char *text );
-void send_playermove_message( int index, int xpos, int ypos );
+void send_playermoved_message( int index, int xpos, int ypos );
 
 /* player.c */
 player_t *get_player( int index );
@@ -219,6 +212,7 @@ void draw_player_list();
 void load_player_tex();
 void move_player( int index, float xinc, float yinc );
 int get_local_player_index();
+void set_show_player_list( int show );
 
 /* editmode.c */
 #define EDITING_PLAYER_LAYER    0
@@ -232,5 +226,6 @@ void draw_edit_widgets();
 void show_title_dialog( int modal );
 void show_server_dialog( int modal );
 void show_client_dialog( int modal );
+void show_chat_dialog( int modal );
 
 #endif /* __MAIN_H */

@@ -7,17 +7,117 @@ texture_t menu_border[9];
 int gui_transition=FALSE;
 float gui_transition_inc=0.0f;
 
+static gg_colour_t col_black =
+{
+    0.0f, 0.0f, 0.0f, 1.0f
+};
+
+/* Get the length of a string of text */
+int get_text_len( char *string )
+{
+    int i;
+    int length=0;
+    int index;
+
+    /* For each character in the string, add it's width plus 1 for spacing. */
+    for ( i=0; i<strlen(string); i++ )
+    {
+        index=string[i];
+        /* If character is a space, add extra width */
+        if ( string[i] == ' ' )
+            length+=7.0f;
+        else
+            length+=get_font()->widths[index-32]+1.0f;
+    }
+
+    return length;
+}
+
+static void draw_texture_uv( texture_t *texture, float xpos,
+                             float ypos, float width, float height, float zpos,
+                             gg_colour_t *col, float u1, float v1, float u2, float v2, GLenum mode_h, GLenum mode_v, float scale)
+{
+    glEnable( GL_TEXTURE_2D );
+
+    glColor4f( col->r, col->g, col->b, col->a );
+    glBindTexture(GL_TEXTURE_2D, texture->gl_index);
+    
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, mode_h);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, mode_v);
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(u1, v1);
+    glVertex3f( xpos, ypos, zpos );
+    glTexCoord2f(u2, v1);
+    glVertex3f( xpos+width*scale, ypos, zpos );
+    glTexCoord2f(u2, v2);
+    glVertex3f( xpos+width*scale, ypos+height*scale, zpos );
+    glTexCoord2f(u1, v2);
+    glVertex3f( xpos, ypos+height*scale, zpos );
+    glEnd();
+
+    glDisable(GL_TEXTURE_2D);
+}
+
+void draw_texture(texture_t *texture, gg_rect_t source, gg_rect_t dest, int mode_h, int mode_v, gg_colour_t *colour, int effect )
+{
+    /*
+        Effect 0 = none
+        Effect 1 = shadow
+    */
+
+    float hsize = texture->u2 - texture->u1;
+    float vsize = texture->v2 - texture->v1;
+    float tex_h = texture->width / hsize;
+    float tex_v = texture->height / vsize;
+    float xsrc = texture->u1 + source.x / tex_h;
+    float ysrc = texture->v1 + source.y / tex_v;
+    float width, height;
+    GLenum en_h, en_v;
+
+    if (mode_h == GG_MODE_TILE)
+    {
+        en_h = GL_REPEAT;
+        width = dest.width / tex_h;
+    }
+    else
+    {
+        en_h = GL_CLAMP;
+        width = source.width / tex_h;
+    }
+
+    if (mode_v == GG_MODE_TILE)
+    {
+        en_v = GL_REPEAT;
+        height = dest.height / tex_v;
+    }
+    else
+    {
+        en_v = GL_CLAMP;
+        height = source.height / tex_v;
+    }
+
+    if (effect == 1)
+    {
+        glPushMatrix();
+        glTranslatef( 2.0f, 2.0f, 0.0f );
+        draw_texture_uv(texture, dest.x, dest.y, dest.width, dest.height, 0.0f, &col_black, 
+            xsrc, ysrc, xsrc + width, ysrc + height, en_h, en_v, 1.0f);
+        glPopMatrix();
+    }
+
+    glPushMatrix();
+    draw_texture_uv(texture, dest.x, dest.y, dest.width, dest.height, 0.0f, colour, 
+        xsrc, ysrc, xsrc + width, ysrc + height, en_h, en_v, 1.0f);
+    glPopMatrix();
+}
+
 void draw_glow( int x, int y, int width, int height, int glow_width, gg_colour_t *col, int middle )
 {
-    gg_colour_t solid =
-    {
-        col->r, col->g, col->b, 1.0f
-    };
+    gg_colour_t solid, trans;
 
-    gg_colour_t trans =
-    {
-        col->r, col->g, col->b, 0.0f
-    };
+    solid.r=col->r; solid.g=col->g; solid.b=col->b; solid.a=1.0f;
+    trans.r=col->r; trans.g=col->g; trans.b=col->b; trans.a=0.0f;
 
     /* Top */
     gg_system_draw_gradient_rect( x, y-glow_width, width, glow_width, &trans, &trans, &solid, &solid, FALSE);
@@ -135,8 +235,7 @@ unsigned int gui_get_ticks()
 
 void *gui_get_char_image(int c)
 {
-   // printf( "%i\n", c);
-    return &get_big_font()->characters[c-32];
+    return &get_font()->characters[c-32];
 }
 
 void gui_get_image_size(void *image, int *width, int *height)
@@ -152,30 +251,25 @@ void gui_get_image_size(void *image, int *width, int *height)
 
 void gui_draw_char(int c, int x, int y, gg_colour_t *colour)
 {
-    //text_draw_char(x, y, 1.0f, c, colour);
+    /* blank.. */
 }
 
 void gui_get_char_size(int c, int *width, int *height)
 {
     if (width)
-        *width = get_big_font()->widths[c-32]+1.0f;
+        *width = get_font()->widths[c-32]+1.0f;
 
     if (height)
-        *height = get_big_font()->size; 
+        *height = get_font()->height; 
 }
 
 void gui_get_string_size(char *s, int *width, int *height)
 {
     if (width)
-        *width=get_text_len( get_big_font(), s );
+        *width=get_text_len( s );
 
     if (height)
-        *height=get_text_size( get_big_font() );
-}
-
-void gui_get_text_spacing( int *spacing )
-{
-    *spacing=1.0f;
+        *height=get_font()->height;
 }
 
 void gui_reset_transition()
@@ -199,12 +293,12 @@ void gui_draw_dialog_fade()
     else
         gui_transition_inc-=0.6;
  
-    //printf( "inc: %f\n", gui_transition_inc );
+
 
     glPushMatrix();
     flash=1.0-(-gui_transition_inc/1000);
     glColor4f( flash, flash, flash, 1.0f );
-    //draw_texture( get_framebuffer_grab() );
+
     glPopMatrix();
 
     glColor4f( 1.0f, 1.0f, 1.0f, 1.0f );
@@ -213,19 +307,19 @@ void gui_draw_dialog_fade()
     glTranslatef( 320.0f, 240.0f, 0.0f );
     glRotatef( gui_transition_inc, 0.0f, 0.0f, 1.0f );
     glScalef( gui_transition_inc/100, gui_transition_inc/100, 1.0f );
-    //draw_texture( get_framebuffer_grab() );
+
     glPopMatrix();
    
     glPushMatrix();
     glTranslatef( 160.0f, 120.0f, 0.0f );
     glRotatef( gui_transition_inc/4, 0.0f, 0.0f, 1.0f );
-    //draw_texture( get_framebuffer_grab() );
+
     glPopMatrix();
 
     glPushMatrix();
     glTranslatef( 480.0f, 360.0f, 0.0f );
     glRotatef( -gui_transition_inc/2, 0.0f, 0.0f, 1.0f );
-    //draw_texture( get_framebuffer_grab() );
+
     glPopMatrix();
 }
 
@@ -238,8 +332,7 @@ gg_driver_t gg_driver_sdlgl =
     gui_draw_char,
     gui_get_image_size,
     gui_get_char_size,
-    gui_get_ticks,
-    gui_get_text_spacing
+    gui_get_ticks
 };
 
 void init_gui()
@@ -261,7 +354,6 @@ void init_gui()
 
 gg_event_t convert_event(SDL_Event *event)
 {
-    static unsigned int pressed;
     gg_event_t gg_event;
 
     gg_event.type=GG_EVENT_NONE;
