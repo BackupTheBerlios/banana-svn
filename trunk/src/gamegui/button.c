@@ -128,7 +128,7 @@ gg_widget_t *gg_button_create(char *text)
     gg_align_set_alignment(GG_ALIGN(label), xalign, yalign);
 
     button = malloc(sizeof(gg_button_t));
-    gg_button_init(button, label);
+    gg_button_init((gg_button_t*)button, label);
 
     return button;
 }

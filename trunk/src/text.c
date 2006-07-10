@@ -46,8 +46,6 @@ static void set_font_widths( char *filename )
 }
 /* TEMPORARY -- Move to XML ------------------------------------------- */
 
-
-
 /* Load a font. */
 void load_font( char *texfile, char *widfile )
 {
