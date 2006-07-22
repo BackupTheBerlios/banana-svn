@@ -8,8 +8,10 @@
 
 #include "main.h"
 
-void draw_anim( anim_t *a, int frame, int xpos, int ypos )
+void draw_anim( anim_t *a, int frame, int xpos, int ypos, int flip )
 {
+    float u1, u2, v1, v2;
+
     glEnable( GL_TEXTURE_2D );
     glBindTexture( GL_TEXTURE_2D, a->tex->gl_index );
 
@@ -18,14 +20,27 @@ void draw_anim( anim_t *a, int frame, int xpos, int ypos )
 
     glTranslatef( xpos, ypos, 0.0f );
 
+    if ( !flip )
+    {
+        u1=a->frames[frame].upos; 
+        u2=a->frames[frame].upos+a->uwidth;
+    }
+    else
+    {
+        u1=a->frames[frame].upos+a->uwidth;
+        u2=a->frames[frame].upos; 
+    }
+   
+    v1=a->frames[frame].vpos; v2=a->frames[frame].vpos+a->vheight;
+
     glBegin( GL_QUADS ); 
-        glTexCoord2f( a->frames[frame].upos, a->frames[frame].vpos ); /* Top Left */
+        glTexCoord2f( u1, v1 ); /* Top Left */
         glVertex3f( 0.0f,  0.0f, 0.0f );
-        glTexCoord2f( a->frames[frame].upos+a->uwidth, a->frames[frame].vpos ); /* Top Right */
+        glTexCoord2f( u2, v1 ); /* Top Right */
         glVertex3f( a->width*2, 0.0f, 0.0f );
-        glTexCoord2f( a->frames[frame].upos+a->uwidth, a->frames[frame].vpos+a->vheight ); /* Bottom Right */
+        glTexCoord2f( u2, v2 ); /* Bottom Right */
         glVertex3f( a->width*2, a->height*2,  0.0f );
-        glTexCoord2f( a->frames[frame].upos, a->frames[frame].vpos+a->vheight ); /* Bottom Left */
+        glTexCoord2f( u1, v2 ); /* Bottom Left */
         glVertex3f( 0.0f,  a->height*2,  0.0f );
     glEnd( ); 
 

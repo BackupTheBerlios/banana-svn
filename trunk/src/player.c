@@ -43,9 +43,14 @@ void init_player_animations()
         walking.frames[i].vpos=0.0f;
     }
 
-    players[get_local_player_index()].current_anim=&walking;
-    players[get_local_player_index()].anim_pos=0;
-    players[get_local_player_index()].last_anim_tick=SDL_GetTicks();
+    /* temp */
+    for (i=0; i<MAX_PLAYERS; i++ )
+    {
+        players[i].current_anim=&walking;
+        players[i].anim_pos=0;
+        players[i].last_anim_tick=SDL_GetTicks();
+    }
+    /* temp */
 }
 
 /* Get the slot in which the local player resides */
@@ -186,7 +191,8 @@ char *get_player_name( int index )
 /* Draw a player */
 void draw_player( int index )
 {
-    draw_anim( players[index].current_anim, players[index].anim_pos, players[index].xpos, players[index].ypos );
+    draw_anim( players[index].current_anim, 
+        players[index].anim_pos, players[index].xpos, players[index].ypos, players[index].facing );
 }
 
 /* Draw all players */
@@ -200,7 +206,7 @@ void draw_players()
         {
             glPushMatrix();
 
-            draw_player( i );
+            draw_player(i);
 
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

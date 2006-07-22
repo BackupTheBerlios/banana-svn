@@ -16,7 +16,7 @@ int *get_pps_out()
     return &pps_out;
 }
 
-void send_playermoved_message( int index, int xpos, int ypos )
+void send_playermoved_message( int index, int xpos, int ypos, int facing )
 {
     char buffer[512];
     unsigned int cxpos=xpos;
@@ -24,10 +24,11 @@ void send_playermoved_message( int index, int xpos, int ypos )
 
     buffer[0]=MESG_PLAYERMOVED;
     buffer[1]=index;
-    memcpy(buffer+2,&cxpos,sizeof(int));
-    memcpy(buffer+6,&cypos,sizeof(int));
+    buffer[2]=facing;
+    memcpy(buffer+3,&cxpos,sizeof(int));
+    memcpy(buffer+7,&cypos,sizeof(int));
 
-    send_message_omit( buffer[1], buffer, 10 );
+    send_message_omit( buffer[1], buffer, 11 );
 }
 
 int get_chat_buffer_lines()
@@ -76,7 +77,7 @@ void send_message_omit( int omited_index, char *buffer, int len )
 
     if (get_server_active())
     {
-        /* Server running. Send message to all connected clients */
+        /* Server running. Send message to all connected clients, except the 'omit' index */
         for (i=1;i<MAX_PLAYERS;i++)
         {
             if (get_player_active(i) && i!=omited_index)

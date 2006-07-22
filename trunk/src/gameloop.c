@@ -58,11 +58,13 @@ void process_sdl_events()
     {
         move_player( get_local_player_index(), -5.0f * PLAYER_MOVE_SPEED, 0.0f );
         player_moved=TRUE;
+        get_player(get_local_player_index())->facing=FACING_LEFT;
     }
     else if ( keystate[SDLK_RIGHT] )
     {
         move_player( get_local_player_index(), 5.0f * PLAYER_MOVE_SPEED, 0.0f );
         player_moved=TRUE;
+        get_player(get_local_player_index())->facing=FACING_RIGHT;
     }
     if ( keystate[SDLK_UP] )
     {
@@ -77,9 +79,10 @@ void process_sdl_events()
 
     if ( player_moved )
     {   
-        send_playermoved_message( get_local_player_index(), 
+       send_playermoved_message( get_local_player_index(), 
             (int)get_player(get_local_player_index())->xpos, 
-            (int)get_player(get_local_player_index())->ypos );
+            (int)get_player(get_local_player_index())->ypos,
+            get_player(get_local_player_index())->facing ); 
     }
 
     /* Show player list? */

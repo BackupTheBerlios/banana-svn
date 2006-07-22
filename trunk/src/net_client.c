@@ -106,8 +106,9 @@ void client_listen()
                         printf( "New player:(%i)%s\n", buffer[1], buffer+2 );
                         break;
                     case MESG_PLAYERMOVED:
-                        get_player(buffer[1])->xpos=*(int *)(buffer+2);
-                        get_player(buffer[1])->ypos=*(int *)(buffer+6);
+                        get_player(buffer[1])->xpos=*(int *)(buffer+3);
+                        get_player(buffer[1])->ypos=*(int *)(buffer+7);
+                        get_player(buffer[1])->facing=buffer[2];
                         break;
                     case MESG_TILE:
                         set_tile(get_player_layer(), buffer[1], buffer[2], 1);

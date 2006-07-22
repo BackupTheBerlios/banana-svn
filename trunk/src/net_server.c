@@ -103,10 +103,10 @@ void server_listen()
                         switch( buffer[0] )
                         {
                             case MESG_PLAYERMOVED:
-
-                                get_player(buffer[1])->xpos=*(int *)(buffer+2);
-                                get_player(buffer[1])->ypos=*(int*)(buffer+6);
-                                send_playermoved_message( buffer[1], *(int *)(buffer+2), *(int *)(buffer+6) );
+                                get_player(buffer[1])->xpos=*(int *)(buffer+3);
+                                get_player(buffer[1])->ypos=*(int*)(buffer+7);
+                                get_player(buffer[1])->facing=buffer[2];
+                                send_playermoved_message( buffer[1], *(int *)(buffer+3), *(int *)(buffer+7), buffer[2] );
                                 break;
                             case MESG_CHAT:
                                 add_chat_buffer_line( buffer+1 );

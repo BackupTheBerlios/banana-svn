@@ -37,6 +37,10 @@
 #define WIDGET_LIST         2
 #define WIDGET_BUTTON       3
 
+/* Game state defines */
+#define FACING_RIGHT        0
+#define FACING_LEFT         1
+
 /* structs */
 typedef struct texture
 {
@@ -99,6 +103,7 @@ typedef struct player
     anim_t *current_anim;
     int last_anim_tick;
     int anim_pos;
+    int facing;
 
     IPaddress *ip;
     TCPsocket socket;
@@ -224,7 +229,7 @@ void add_chat_buffer_line( char *text );
 int get_chat_buffer_lines();
 void send_chat_message( char *text );
 void send_who_message( TCPsocket socket, char *text );
-void send_playermoved_message( int index, int xpos, int ypos );
+void send_playermoved_message( int index, int xpos, int ypos, int facing );
 int *get_pps_in();
 int *get_pps_out();
 
@@ -255,7 +260,7 @@ void set_editing( int edit );
 void draw_edit_widgets();
 
 /* anim.c */
-void draw_anim( anim_t *a, int frame, int xpos, int ypos );
+void draw_anim( anim_t *a, int frame, int xpos, int ypos, int flip );
 
 /* Dialogs. */
 void show_title_dialog( int modal );
