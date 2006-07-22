@@ -19,6 +19,35 @@ static gg_colour_t col_white =
     1.0f, 1.0f, 1.0f, 1.0f
 };
 
+/* Play anims..*/
+anim_t walking;
+
+void init_player_animations()
+{
+    int i=0;
+
+    walking.tex=&player;
+    walking.speed=64;
+    walking.frame_count=16;
+    walking.loop_frame=0;
+    walking.width=44;
+    walking.height=50;
+
+    walking.frames=malloc(sizeof(frame_pos_t)*16);
+    walking.uwidth=(float)walking.width/1024;
+    walking.vheight=(float)walking.height/64;
+
+    for ( i=15; i>=0; i-- )
+    {
+        walking.frames[i].upos=(15-i)*walking.uwidth;
+        walking.frames[i].vpos=0.0f;
+    }
+
+    players[get_local_player_index()].current_anim=&walking;
+    players[get_local_player_index()].anim_pos=0;
+    players[get_local_player_index()].last_anim_tick=SDL_GetTicks();
+}
+
 /* Get the slot in which the local player resides */
 int get_local_player_index()
 {
@@ -44,7 +73,7 @@ void move_player( int index, float xinc, float yinc )
 /* Load the player texture. TEMPORARY */
 void load_player_tex()
 {
-    load_texture( &player, "./data/player_temp.png", TRUE );
+    load_texture( &player, "./data/player_temp2.png", TRUE );
 }
 /* TEMPORARY */
 
@@ -157,30 +186,7 @@ char *get_player_name( int index )
 /* Draw a player */
 void draw_player( int index )
 {
-    glEnable( GL_TEXTURE_2D );
-    glBindTexture( GL_TEXTURE_2D, player.gl_index );
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    glTranslatef( players[index].xpos, players[index].ypos, 0.0f );
-
-    glBegin( GL_QUADS ); 
-        glTexCoord2f( 0.0f, 0.0f ); /* Top Left */
-        glVertex3f( 0.0f,  0.0f, 0.0f );
-
-        glTexCoord2f( 1.0f, 0.0f ); /* Top Right */
-        glVertex3f( 128, 0.0f, 0.0f );
-
-        glTexCoord2f( 1.0f, 1.0f ); /* Bottom Right */
-        glVertex3f( 128, 128,  0.0f );
-
-        glTexCoord2f( 0.0f, 1.0f ); /* Bottom Left */
-        glVertex3f( 0.0f,  128,  0.0f );
-    glEnd( ); 
-
-    glDisable( GL_BLEND );
-    glDisable( GL_TEXTURE_2D );
+    draw_anim( players[index].current_anim, players[index].anim_pos, players[index].xpos, players[index].ypos );
 }
 
 /* Draw all players */
@@ -201,6 +207,17 @@ void draw_players()
             gg_system_draw_string(players[i].name, 0, 0, &col_white, 0, 0, 0);
             glDisable( GL_BLEND );
             glPopMatrix();
+
+            /* Update the player animation.. */
+            if ( SDL_GetTicks()-players[i].last_anim_tick > (1000/players[i].current_anim->speed) )
+            {
+                if ( players[i].anim_pos < players[i].current_anim->frame_count-1 )
+                    players[i].anim_pos++;
+                else
+                    players[i].anim_pos=players[i].current_anim->loop_frame;
+
+                players[i].last_anim_tick=SDL_GetTicks();
+            }
         }
     }
 }

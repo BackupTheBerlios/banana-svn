@@ -14,6 +14,7 @@ int main( int argc, char *argv[])
 
     /* temp! */
     load_player_tex();
+    init_player_animations();
 
     set_camera( 0.0f, 0.0f );
 

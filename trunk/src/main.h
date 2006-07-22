@@ -63,6 +63,25 @@ typedef struct texture
 }
 texture_t;
 
+typedef struct frame_pos
+{
+    float upos, vpos;
+}frame_pos_t;
+
+typedef struct anim
+{
+    float speed;
+    int frame_count;
+    int loop_frame;   
+    int width, height;
+    float uwidth, vheight;
+
+    frame_pos_t *frames;
+
+    texture_t *tex;    
+
+}anim_t;
+
 typedef struct font
 {
     texture_t characters[96];
@@ -76,6 +95,10 @@ typedef struct player
     float xpos, ypos;
     char name[80];
     int active;
+
+    anim_t *current_anim;
+    int last_anim_tick;
+    int anim_pos;
 
     IPaddress *ip;
     TCPsocket socket;
@@ -221,6 +244,7 @@ void load_player_tex();
 void move_player( int index, float xinc, float yinc );
 int get_local_player_index();
 void set_show_player_list( int show );
+void init_player_animations();
 
 /* editmode.c */
 #define EDITING_PLAYER_LAYER    0
@@ -229,6 +253,9 @@ int get_editmode();
 int get_editing();
 void set_editing( int edit );
 void draw_edit_widgets();
+
+/* anim.c */
+void draw_anim( anim_t *a, int frame, int xpos, int ypos );
 
 /* Dialogs. */
 void show_title_dialog( int modal );

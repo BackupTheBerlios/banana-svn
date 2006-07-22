@@ -48,6 +48,7 @@ void render_scene()
     /* Draw the map */
     glPushMatrix();
      glTranslatef( -get_camera_x(), -get_camera_y(), 0.0f );
+     /*glRotatef( 45.0f, 0.0f, 0.0f, 1.0f );*/
      glColor3f( 1.0f, 1.0f, 1.0f );
      draw_map();
     glPopMatrix();

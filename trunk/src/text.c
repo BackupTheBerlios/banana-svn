@@ -16,7 +16,6 @@ font_t *get_font()
     return &font;
 }
 
-/* TEMPORARY -- Move to XML ------------------------------------------- */
 static void set_font_widths( char *filename )
 {
   int temp;
@@ -44,7 +43,6 @@ static void set_font_widths( char *filename )
 
   fclose (file); 
 }
-/* TEMPORARY -- Move to XML ------------------------------------------- */
 
 /* Load a font. */
 void load_font( char *texfile, char *widfile )

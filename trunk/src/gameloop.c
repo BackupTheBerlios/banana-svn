@@ -83,7 +83,7 @@ void process_sdl_events()
     }
 
     /* Show player list? */
-    if ( keystate[SDLK_TAB] )
+    if ( (get_client_active() || get_server_active()) && keystate[SDLK_TAB] )
         set_show_player_list(TRUE);
     else
         set_show_player_list(FALSE);     
@@ -125,13 +125,16 @@ void process_sdl_events()
                         quit(0);
                         break;
                     case SDLK_s: /* Open server dialog */
-                        show_server_dialog(FALSE);
+                        if ( !get_server_active() && !get_client_active() ) 
+                            show_server_dialog(FALSE);
                         break;
                     case SDLK_c: /* Open clients dialog */
-                        show_client_dialog(FALSE);
+                        if ( !get_server_active() && !get_client_active() )
+                            show_client_dialog(FALSE);
                         break;
                     case SDLK_t: /* Open chat dialog */
-                        show_chat_dialog(FALSE);
+                        if ( get_server_active() || get_client_active() )
+                            show_chat_dialog(FALSE);
                         break;
                     case SDLK_e: /* Toggle edit mode */
                         if (!gg_dialog_current())

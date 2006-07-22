@@ -63,8 +63,8 @@ void grab_framebuffer()
     /* Create a GL texture from the now flipped buffer */
     glGenTextures(1, &framebuffer_grab.gl_index);
     glBindTexture(GL_TEXTURE_2D, framebuffer_grab.gl_index);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data2);
 
     /* Free the buffers */
@@ -124,8 +124,8 @@ texture_t SDL_GL_LoadTexture(SDL_Surface *surface, SDL_Rect *area, int alpha)
     /* Create an OpenGL texture from the temporary surface. */
     glGenTextures(1, &texture.gl_index);
     glBindTexture(GL_TEXTURE_2D, texture.gl_index);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, (alpha ? 4 : 3), w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
     SDL_FreeSurface(image);
 
