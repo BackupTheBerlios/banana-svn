@@ -34,6 +34,7 @@ void render_scene()
     gg_dialog_t *dialog;
     static Uint32 last = 0;
     Uint32 now;
+    char temp[80];
     int i;
 
     fps_enabled=TRUE;
@@ -104,22 +105,31 @@ void render_scene()
     /* Draw the FPS if enabled */
     if (fps_enabled)
     {
-        char fps_s[80];
-
         glPushMatrix();
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
-        sprintf(fps_s, "FPS: %.2f", fps);
-        gg_system_draw_string(fps_s, 5, 5, &col_red, 0, 0, 0);
+        sprintf(temp, "FPS: %.2f", fps);
+        gg_system_draw_string(temp, 5, 5, &col_red, 0, 0, 0);
         glTranslatef(0.0f,17.0f,0.0f);
-        sprintf(fps_s, "Net In: %i", *get_pps_in());
-        gg_system_draw_string(fps_s, 5, 5, &col_red, 0, 0, 0);
+        sprintf(temp, "Net In: %i", *get_pps_in());
+        gg_system_draw_string(temp, 5, 5, &col_red, 0, 0, 0);
         glTranslatef(0.0f,17.0f,0.0f);
-        sprintf(fps_s, "Net Out: %i", *get_pps_out());
-        gg_system_draw_string(fps_s, 5, 5, &col_red, 0, 0, 0);
+        sprintf(temp, "Net Out: %i", *get_pps_out());
+        gg_system_draw_string(temp, 5, 5, &col_red, 0, 0, 0);
         glDisable(GL_BLEND);
         glPopMatrix();
     }
+
+    /* temp */
+    glPushMatrix();
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
+    glTranslatef(0.0f,17.0f*4,0.0f);
+    sprintf(temp, "Animation frames per second: %.2f", get_player(get_local_player_index())->current_anim->speed);
+    gg_system_draw_string(temp, 5, 5, &col_red, 0, 0, 0);
+    glDisable(GL_BLEND);
+    glPopMatrix();
+    /* temp */
 
     /* Swap the buffers. */
     SDL_GL_SwapBuffers();

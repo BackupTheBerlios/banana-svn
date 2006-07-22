@@ -121,6 +121,14 @@ void process_sdl_events()
             case SDL_KEYDOWN:
                 switch ( event.key.keysym.sym )
                 {
+                    /* temp */
+                    case SDLK_EQUALS:
+                        get_player(get_local_player_index())->current_anim->speed++;
+                        break;
+                    case SDLK_MINUS:
+                        get_player(get_local_player_index())->current_anim->speed--;
+                        break;
+                    /* temp */
                     case SDLK_ESCAPE: /* Quit */
                         quit(0);
                         break;
