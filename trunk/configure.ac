@@ -146,5 +146,6 @@ AC_CONFIG_FILES([Makefile
 		src/Makefile
         src/gamegui/Makefile
         src/gamegui/include/Makefile
-        src/gamegui/include/gamegui/Makefile])
+        src/gamegui/include/gamegui/Makefile
+        src/mxml/Makefile])
 AC_OUTPUT
