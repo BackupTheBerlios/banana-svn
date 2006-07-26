@@ -59,16 +59,20 @@ void render_scene()
      draw_players();
     glPopMatrix();
 
-    /* If a GameGUI dialog is active, draw it. */
-    if (gg_dialog_current())
+    /* If GameGUI dialogs are active, draw them. */
+    for (i=0;i<gg_dialog_count();i++)
     {
         glPushMatrix();
-         dialog = gg_dialog_current();
+         dialog=gg_get_dialog(i);
          glEnable(GL_BLEND);
          glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+         if (i==gg_dialog_count()-1)
+            gg_dialog_set_trans( 1.0f );
+         else   
+            gg_dialog_set_trans( 0.5f );
          gg_dialog_render(dialog);
          glDisable(GL_BLEND);
-        glPopMatrix();
+        glPopMatrix();        
     }
  
     /* Draw the chat buffer. */

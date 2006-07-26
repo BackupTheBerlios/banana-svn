@@ -119,9 +119,9 @@ void client_listen()
     }
 }
 
-void connect_to_server( char *host, int port, char *nickname )
+int connect_to_server( char *host, int port, char *nickname )
 {
-    printf( "Connecting to %s on port %i\n", host, port );
+    /*printf( "Connecting to %s on port %i\n", host, port );*/
 
     sprintf(server_hostname, "%s", host );
     server_port=port;
@@ -129,15 +129,19 @@ void connect_to_server( char *host, int port, char *nickname )
 	/* Get the IP of the server from the hostname. */
 	if (SDLNet_ResolveHost(&server_ip, server_hostname, server_port))
 	{
-		printf("SDLNet_ResolveHost: %s\n", SDLNet_GetError());
-		exit(EXIT_FAILURE);
+        show_mesg_dialog( "Unable to resolve host." );
+        return FALSE;
+		/*printf("SDLNet_ResolveHost: %s\n", SDLNet_GetError());
+		exit(EXIT_FAILURE);*/
 	}
     
 	/* Open a connection to the server. */
 	if (!(server_socket = SDLNet_TCP_Open(&server_ip)))
 	{
-		printf("SDLNet_TCP_Open: %s\n", SDLNet_GetError());
-		exit(EXIT_FAILURE);
+        show_mesg_dialog( "Unable to connect to server." );
+        return FALSE;
+		/*printf("SDLNet_TCP_Open: %s\n", SDLNet_GetError());
+		exit(EXIT_FAILURE);*/
 	}
 
     server_sockets=SDLNet_AllocSocketSet(1);
@@ -154,4 +158,6 @@ void connect_to_server( char *host, int port, char *nickname )
 
     client_active=TRUE;
     printf( "Connected to server.\n" );
+
+    return TRUE;
 }

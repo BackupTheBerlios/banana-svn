@@ -214,7 +214,7 @@ TCPsocket get_client_socket( int index );
 /* net_client.c */
 void client_listen();
 int get_client_active();
-void connect_to_server( char *host, int port, char *nickname );
+int connect_to_server( char *host, int port, char *nickname );
 TCPsocket get_server_socket();
 int get_client_slot();
 void send_disconnect_message();
@@ -267,5 +267,6 @@ void show_title_dialog( int modal );
 void show_server_dialog( int modal );
 void show_client_dialog( int modal );
 void show_chat_dialog( int modal );
+void show_mesg_dialog( char *message );
 
 #endif /* __MAIN_H */

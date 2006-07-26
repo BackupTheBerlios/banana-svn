@@ -39,7 +39,7 @@ static void draw_texture_uv( texture_t *texture, float xpos,
 {
     glEnable( GL_TEXTURE_2D );
 
-    glColor4f( col->r, col->g, col->b, col->a );
+    glColor4f( col->r, col->g, col->b, col->a-(1.0f-gg_dialog_trans()) );
     glBindTexture(GL_TEXTURE_2D, texture->gl_index);
     
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, mode_h);
@@ -181,7 +181,7 @@ gg_dialog_style_t *get_menu_style()
 
 void gui_draw_rect(int x, int y, int w, int h, gg_colour_t *col)
 {
-    glColor4f(col->r, col->g, col->b, col->a);
+    glColor4f(col->r, col->g, col->b, col->a-(1.0f-gg_dialog_trans()));
     glBegin(GL_LINE_LOOP);
     glVertex3f(x + 0.5f, y + 0.5f, 1.0f);
     glVertex3f(x + w + 0.5f, y + 0.5f, 1.0f);
@@ -196,26 +196,26 @@ void gui_draw_rect_fill(int x, int y, int w, int h,
     if (start_right)
     {
         glBegin(GL_QUADS);
-        glColor4f(top_right->r, top_right->g, top_right->b, top_right->a);
+        glColor4f(top_right->r, top_right->g, top_right->b, top_right->a-(1.0f-gg_dialog_trans()));
         glVertex3f(x + w, y, 0.0f);
-        glColor4f(bottom_right->r, bottom_right->g, bottom_right->b, bottom_right->a);
+        glColor4f(bottom_right->r, bottom_right->g, bottom_right->b, bottom_right->a-(1.0f-gg_dialog_trans()));
         glVertex3f(x + w, y + h, 0.0f);
-        glColor4f(bottom_left->r, bottom_left->g, bottom_left->b, bottom_left->a);
+        glColor4f(bottom_left->r, bottom_left->g, bottom_left->b, bottom_left->a-(1.0f-gg_dialog_trans()));
         glVertex3f(x, y + h, 0.0f);
-        glColor4f(top_left->r, top_left->g, top_left->b, top_left->a);
+        glColor4f(top_left->r, top_left->g, top_left->b, top_left->a-(1.0f-gg_dialog_trans()));
         glVertex3f(x, y, 0.0f);
         glEnd();
     }
     else
     {
         glBegin(GL_QUADS);
-        glColor4f(top_left->r, top_left->g, top_left->b, top_left->a);
+        glColor4f(top_left->r, top_left->g, top_left->b, top_left->a-(1.0f-gg_dialog_trans()));
         glVertex3f(x, y, 0.0f);
-        glColor4f(top_right->r, top_right->g, top_right->b, top_right->a);
+        glColor4f(top_right->r, top_right->g, top_right->b, top_right->a-(1.0f-gg_dialog_trans()));
         glVertex3f(x + w, y, 0.0f);
-        glColor4f(bottom_right->r, bottom_right->g, bottom_right->b, bottom_right->a);
+        glColor4f(bottom_right->r, bottom_right->g, bottom_right->b, bottom_right->a-(1.0f-gg_dialog_trans()));
         glVertex3f(x + w, y + h, 0.0f);
-        glColor4f(bottom_left->r, bottom_left->g, bottom_left->b, bottom_left->a);
+        glColor4f(bottom_left->r, bottom_left->g, bottom_left->b, bottom_left->a-(1.0f-gg_dialog_trans()));
         glVertex3f(x, y + h, 0.0f);
         glEnd();
     }
@@ -292,8 +292,6 @@ void gui_draw_dialog_fade()
     }
     else
         gui_transition_inc-=0.6;
- 
-
 
     glPushMatrix();
     flash=1.0-(-gui_transition_inc/1000);
@@ -451,6 +449,14 @@ gg_event_t convert_event(SDL_Event *event)
     case SDL_MOUSEBUTTONDOWN:
         gg_event.type = GG_EVENT_MOUSE;
         gg_event.mouse.type = GG_MOUSE_BUTTON_DOWN;
+        gg_event.mouse.button = event->button.button - 1;
+        gg_event.mouse.x = event->button.x;
+        gg_event.mouse.y = event->button.y;
+        break;
+
+    case SDL_MOUSEBUTTONUP:
+        gg_event.type = GG_EVENT_MOUSE;
+        gg_event.mouse.type = GG_MOUSE_BUTTON_UP;
         gg_event.mouse.button = event->button.button - 1;
         gg_event.mouse.x = event->button.x;
         gg_event.mouse.y = event->button.y;

@@ -101,7 +101,7 @@ void draw_player_list()
 
     /* Fetch the border width, and draw the border */
     gg_system_get_image_size(get_menu_style()->border.textured.image[0], &size, NULL);
-    draw_border(get_menu_style()->border.textured.image, area, size); 
+    draw_border(get_menu_style()->border.textured.image, area, size, NULL); 
 
     /* Increment text y positiom, and draw a string saying if we are server, or client */
     text_pos=area.y+1;

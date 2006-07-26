@@ -43,8 +43,8 @@ static void nick_changed(gg_widget_t *widget, void *data)
 
 static void start(gg_widget_t *widget, void *data)
 {
-    connect_to_server(client_ip,client_port,client_nickname);
-    gg_dialog_close();
+    if (connect_to_server(client_ip,client_port,client_nickname))
+        gg_dialog_close();
 }
 
 static gg_dialog_t *create_client_dialog( int modal )
@@ -60,7 +60,7 @@ static gg_dialog_t *create_client_dialog( int modal )
     widget = gg_button_create("Cancel");
     gg_button_set_callback(GG_BUTTON(widget), close, NULL);        
     gg_container_append(GG_CONTAINER(hbox), widget);
-    widget = gg_button_create("Start");
+    widget = gg_button_create("Connect");
     gg_button_set_callback(GG_BUTTON(widget), start, NULL);        
     gg_container_append(GG_CONTAINER(hbox), widget);
     gg_container_append(GG_CONTAINER(vbox), hbox);
@@ -92,11 +92,7 @@ static gg_dialog_t *create_client_dialog( int modal )
     gg_container_append(GG_CONTAINER(hbox), widget);
     gg_container_append(GG_CONTAINER(vbox), hbox);
 
-    widget = gg_label_create("Connect to server.");
-    gg_label_set_colour(GG_LABEL(widget), &col_white, &col_trans );
-    gg_container_append(GG_CONTAINER(vbox), widget);
-
-    dialog = gg_dialog_create(vbox);
+    dialog = gg_dialog_create(vbox, "Connect to Server");
     if (modal)
         gg_dialog_set_modal(GG_DIALOG(dialog), 1);
     gg_dialog_set_position(GG_DIALOG(dialog), 320, 300, 0.5f, 0.0f);

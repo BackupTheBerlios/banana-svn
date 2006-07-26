@@ -41,7 +41,13 @@
     gg_dialog_position_t pos;                                                \
                                                                              \
     /** Visual dialog style. */                                              \
-    gg_dialog_style_t style;
+    gg_dialog_style_t style;                                                 \
+                                                                             \
+    /** Draw a titlebar? */                                                  \
+    char *titlebar;                                                          \
+    int moving;                                                              \
+    int move_xoffset;                                                        \
+    int move_yoffset;                                            
 
 /* FIXME */
 /** Screen width in pixels. */
@@ -197,16 +203,21 @@ void gg_dialog_input_current(gg_event_t event);
  */
 void gg_dialog_set_modal(gg_dialog_t *dialog, int modal);
 
+int gg_dialog_count();
+gg_dialog_t *gg_get_dialog( int index );
+void gg_dialog_set_trans( float trans );
+float gg_dialog_trans();
+
 void gg_dialog_set_position(gg_dialog_t *dialog, int x, int y, float x_align, float y_align);
 
-void gg_dialog_init(gg_dialog_t *dialog, gg_widget_t *child);
+void gg_dialog_init(gg_dialog_t *dialog, gg_widget_t *child, char *titlebar);
 
 void gg_dialog_set_style(gg_dialog_t *dialog, gg_dialog_style_t *style);
 
-gg_widget_t *gg_dialog_create(gg_widget_t *child);
+gg_widget_t *gg_dialog_create(gg_widget_t *child, char *titlebar);
 
 gg_class_id gg_dialog_get_class_id();
 
-void draw_border(void *image[9], gg_rect_t area, int size);
+void draw_border(void *image[9], gg_rect_t area, int size, char *titlebar);
 
 #endif /* GAMEGUI_DIALOG_H */

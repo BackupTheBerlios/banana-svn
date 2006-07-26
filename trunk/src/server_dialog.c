@@ -75,11 +75,7 @@ static gg_dialog_t *create_server_dialog( int modal )
     gg_container_append(GG_CONTAINER(hbox), widget);
     gg_container_append(GG_CONTAINER(vbox), hbox);
 
-    widget = gg_label_create("Start server.");
-    gg_label_set_colour(GG_LABEL(widget), &col_white, &col_trans );
-    gg_container_append(GG_CONTAINER(vbox), widget);
-
-    dialog = gg_dialog_create(vbox);
+    dialog = gg_dialog_create(vbox, "Start Server");
     if (modal)
         gg_dialog_set_modal(GG_DIALOG(dialog), 1);
     gg_dialog_set_position(GG_DIALOG(dialog), 320, 300, 0.5f, 0.0f);
@@ -90,6 +86,6 @@ static gg_dialog_t *create_server_dialog( int modal )
 
 void show_server_dialog( int modal )
 { 
-    if (!gg_dialog_current())
+   if (!gg_dialog_current())
         gg_dialog_open(create_server_dialog(modal));
 }

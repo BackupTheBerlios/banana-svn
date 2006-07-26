@@ -31,9 +31,7 @@ static gg_dialog_t *create_chat_dialog( int modal )
     gg_set_requested_size(widget,500,0);
     gg_container_append(GG_CONTAINER(vbox), widget);
     
-    dialog = gg_dialog_create(vbox);
-    if (modal)
-        gg_dialog_set_modal(GG_DIALOG(dialog), 1);
+    dialog = gg_dialog_create(vbox, NULL);
     gg_dialog_set_position(GG_DIALOG(dialog), 320, 375, 0.5f, 0.0f);
     gg_dialog_set_style(GG_DIALOG(dialog), get_menu_style() );
 
@@ -42,6 +40,6 @@ static gg_dialog_t *create_chat_dialog( int modal )
 
 void show_chat_dialog( int modal )
 {   
-    if (!gg_dialog_current())
+   /* if (!gg_dialog_current()) */
         gg_dialog_open(create_chat_dialog(modal));
 }
