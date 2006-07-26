@@ -220,84 +220,6 @@ void draw_border( void *image[9], gg_rect_t area, int size, char *titlebar)
     gg_system_draw_image(image[4], source, dest, GG_MODE_TILE, GG_MODE_TILE, &fade_col, FALSE);
 }
 
-void draw_border2(void *image[9], gg_rect_t area, int size, char *titlebar)
-{
-    gg_rect_t source, dest;
-    gg_colour_t fade_col={1.0f,1.0f,1.0f,0.8f};  
-    int image_size;
-    int titlebar_height, titlebar_width;
-    gg_system_get_string_size(titlebar, &titlebar_width, &titlebar_height);
-    titlebar_height+=5;
-
-    gg_system_get_image_size(image[0], &image_size, NULL);
-
-    area.x -= size;
-    area.y -= size;
-
-    area.width += 2 * size;
-    area.height += 2 * size;
-
-    source.x = 0;
-    source.y = 0;
-    source.width = image_size;
-    source.height = image_size;
-
-    dest.x = area.x;
-    dest.y = area.y;
-    dest.width = size;
-    dest.height = size;
-
-    dest.height+=titlebar_height;
-    dest.y-=titlebar_height;
-    gg_system_draw_image(image[0], source, dest, GG_MODE_SCALE, GG_MODE_SCALE, &col_white, FALSE);
-    dest.y += titlebar_height;
-    dest.height = size;
-
-    dest.y += area.height - size;
-    gg_system_draw_image(image[6], source, dest, GG_MODE_SCALE, GG_MODE_SCALE, &col_white, FALSE);
-    dest.x += area.width - size;
-    gg_system_draw_image(image[8], source, dest, GG_MODE_SCALE, GG_MODE_SCALE, &col_white, FALSE);
-    dest.y -= area.height - size;
-
-    dest.height+=titlebar_height;
-    dest.y-=titlebar_height;
-    gg_system_draw_image(image[2], source, dest, GG_MODE_SCALE, GG_MODE_SCALE, &col_white, FALSE);
-    dest.y += titlebar_height;
-    dest.height = size;
-
-    dest.x = area.x + size;
-    dest.y = area.y;
-    dest.width = area.width - (2*size);
-    dest.height = size;
-
-    dest.height+=titlebar_height;
-    dest.y-=titlebar_height;
-    gg_system_draw_image(image[1], source, dest, GG_MODE_TILE, GG_MODE_SCALE, &col_white, FALSE);
-    /* draw titlebar gradient.. */
-    gg_system_draw_gradient_rect( dest.x, dest.y, dest.width, titlebar_height, 
-        &col_blue2, &col_blue, &col_blue2, &col_blue, FALSE );
-    /* Draw titlebar label */
-    gg_system_draw_string(titlebar, dest.x+5, dest.y+2, &col_white, 0, 1, 0);
-    dest.y += titlebar_height;
-    dest.height = size;
-
-    dest.y += area.height - size;
-    gg_system_draw_image(image[7], source, dest, GG_MODE_TILE, GG_MODE_SCALE, &col_white, FALSE);
-
-    dest.x = area.x;
-    dest.y = area.y + size;
-    dest.width = size;
-    dest.height = area.height - (2*size);
-    gg_system_draw_image(image[3], source, dest, GG_MODE_SCALE, GG_MODE_TILE, &col_white, FALSE);
-    dest.x += area.width - size;
-    gg_system_draw_image(image[5], source, dest, GG_MODE_SCALE, GG_MODE_TILE, &col_white, FALSE);
-
-    dest.x = area.x + size;
-    dest.width = area.width - 2 * size;
-    gg_system_draw_image(image[4], source, dest, GG_MODE_TILE, GG_MODE_TILE, &fade_col, FALSE);
-
-}
-
 /** @brief Renders a dialog.
  *
  *  Renders a dialog in a specific style and at a specific position.
@@ -494,6 +416,8 @@ void gg_dialog_init(gg_dialog_t *dialog, gg_widget_t *child, char *titlebar)
     dialog->modal = 0;
     if (titlebar)
         dialog->titlebar = strdup(titlebar);
+    else
+        dialog->titlebar=NULL;
     dialog->moving=FALSE;
     dialog->move_xoffset=0;
     dialog->move_yoffset=0;
