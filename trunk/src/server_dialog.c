@@ -86,6 +86,6 @@ static gg_dialog_t *create_server_dialog( int modal )
 
 void show_server_dialog( int modal )
 { 
-   if (!gg_dialog_current())
+  /* if (!gg_dialog_current())*/
         gg_dialog_open(create_server_dialog(modal));
 }

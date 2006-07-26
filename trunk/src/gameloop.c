@@ -136,7 +136,7 @@ void process_sdl_events()
                         quit(0);
                         break;
                     case SDLK_s: /* Open server dialog */
-                        if ( !get_server_active() && !get_client_active() ) 
+                        if ( !get_server_active() && !get_client_active() )
                             show_server_dialog(FALSE);
                         break;
                     case SDLK_c: /* Open clients dialog */
