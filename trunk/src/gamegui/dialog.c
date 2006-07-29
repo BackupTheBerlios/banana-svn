@@ -36,6 +36,16 @@ static gg_colour_t col_blue2 =
         0.0f, 0.0f, 0.5f, 1.0f
     };
 
+static gg_colour_t col_grey =
+    {
+        0.5f, 0.5f, 0.5f, 1.0f
+    };
+
+static gg_colour_t col_grey2 =
+    {
+        0.25f, 0.25f, 0.25f, 1.0f
+    };
+
 gg_class_id gg_dialog_get_class_id()
 {
     GG_CHILD(gg_bin_get_class_id())
@@ -149,7 +159,7 @@ void gg_dialog_get_screen_pos(gg_dialog_t *dialog, int *x, int *y)
     *y = dialog->pos.y - dialog->height * dialog->pos.y_align;
 }
 
-void draw_border( void *image[9], gg_rect_t area, int size, char *titlebar)
+void draw_border( void *image[9], gg_rect_t area, int size, char *titlebar, int active)
 {
     gg_rect_t source, dest;
     gg_colour_t fade_col={1.0f,1.0f,1.0f,0.8f};
@@ -184,8 +194,14 @@ void draw_border( void *image[9], gg_rect_t area, int size, char *titlebar)
     {    
         dest.x = area.x-5; dest.y = area.y-titlebar_height+5;
         dest.width = area.width+10; dest.height = titlebar_height-10;
-        gg_system_draw_gradient_rect( dest.x, dest.y, dest.width, dest.height, 
-            &col_blue2, &col_blue, &col_blue2, &col_blue, FALSE );
+
+        if ( active )
+            gg_system_draw_gradient_rect( dest.x, dest.y, dest.width, dest.height, 
+                &col_blue2, &col_blue, &col_blue2, &col_blue, FALSE );
+        else
+            gg_system_draw_gradient_rect( dest.x, dest.y, dest.width, dest.height, 
+                &col_grey2, &col_grey, &col_grey2, &col_grey, FALSE );
+
         gg_system_draw_string(titlebar, dest.x+5, dest.y+2, &col_white, 0, 1, 0);
     }
 
@@ -247,6 +263,7 @@ void gg_dialog_render(gg_dialog_t *dialog)
     {
         int size;
         gg_rect_t area;
+        int active;
 
         gg_system_get_image_size(style->border.textured.image[0], &size, NULL);
 
@@ -260,7 +277,12 @@ void gg_dialog_render(gg_dialog_t *dialog)
         area.width = xmax - xmin;
         area.height = ymax - ymin;
 
-        draw_border(style->border.textured.image, area, size, dialog->titlebar);
+        if ( dialog == gg_dialog_current() )
+            active=TRUE;
+        else
+            active=FALSE;        
+
+        draw_border(style->border.textured.image, area, size, dialog->titlebar, active);
     }
     else
     {
@@ -371,9 +393,50 @@ int gg_dialog_input(gg_widget_t *widget, gg_event_t event)
     return child->input(child, event);
 }
 
+int gg_dialog_mouse_over( gg_dialog_t * dialog, int xpos, int ypos )
+{
+    int x,y;
+    gg_dialog_get_screen_pos(dialog, &x, &y);
+
+    if ( dialog->titlebar && xpos>x && xpos<(x+dialog->width) && ypos>y-20 && ypos<(y+dialog->height) )
+        return TRUE;
+    else if ( xpos>x && xpos<(x+dialog->width) && ypos>y && ypos<(y+dialog->height) )
+        return TRUE;
+    else
+        return FALSE;
+}
+
+void gg_dialog_move_to_front( int index )
+{
+    gg_dialog_t *d=dialog_stack[index]; 
+    int i=0;
+
+    for (i=index; i<dialog_nr-1; i++ )
+    {
+        dialog_stack[i]=dialog_stack[i+1];
+    }
+    dialog_stack[dialog_nr-1]=d;
+}
+
 void gg_dialog_input_current(gg_event_t event)
 {
-    gg_dialog_t *dialog = gg_dialog_current();
+    gg_dialog_t *dialog;
+    int i=0;
+
+    /* Which dialog is actually current? hmm */
+    for (i=dialog_nr-1; i>=0; i-- )    
+    {
+        /*printf( "We have dialog[%i] at %i,%i\n", i, dialog_stack[i]->pos.x, dialog_stack[i]->pos.x );*/
+        if ( gg_dialog_mouse_over(dialog_stack[i], event.mouse.x, event.mouse.y ) )
+        {
+            /*printf( "Dialog[%i] is now active - %i\n", i, SDL_GetTicks() );*/
+            gg_dialog_move_to_front( i );
+            break;
+        }
+            /*dialog=dialog_stack[i];*/
+    }
+
+    dialog = gg_dialog_current();
 
     if (!dialog)
         return;

@@ -43,7 +43,7 @@ void draw_edit_widgets()
     area.width+=size;
 
     glTranslatef( 8.0f, 7.0f, 0.0f );
-    draw_border(get_menu_style()->border.textured.image, area, size, NULL); 
+    draw_border(get_menu_style()->border.textured.image, area, size, NULL, FALSE); 
     gg_system_draw_string(temp_str, 5, 1, &col_white, 0, 0, 0);
 
     glDisable(GL_BLEND);

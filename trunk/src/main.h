@@ -172,6 +172,7 @@ void process_mouse();
 void set_camera( float xpos, float ypos );
 float get_camera_x();
 float get_camera_y();
+void move_camera_on_player( int index );
 
 /* keyboard.c */
 void process_keyboard();

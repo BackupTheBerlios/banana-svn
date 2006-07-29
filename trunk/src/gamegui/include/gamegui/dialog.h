@@ -218,6 +218,6 @@ gg_widget_t *gg_dialog_create(gg_widget_t *child, char *titlebar);
 
 gg_class_id gg_dialog_get_class_id();
 
-void draw_border(void *image[9], gg_rect_t area, int size, char *titlebar);
+void draw_border(void *image[9], gg_rect_t area, int size, char *titlebar, int active);
 
 #endif /* GAMEGUI_DIALOG_H */

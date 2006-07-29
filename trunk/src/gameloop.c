@@ -54,28 +54,31 @@ void process_sdl_events()
     }
 
     /* temporary.. move player.. */
-    if ( keystate[SDLK_LEFT] )
+    if ( keystate[SDLK_LEFT] && !get_editing() )
     {
         move_player( get_local_player_index(), -5.0f * PLAYER_MOVE_SPEED, 0.0f );
         player_moved=TRUE;
         get_player(get_local_player_index())->facing=FACING_LEFT;
     }
-    else if ( keystate[SDLK_RIGHT] )
+    else if ( keystate[SDLK_RIGHT] && !get_editing() )
     {
         move_player( get_local_player_index(), 5.0f * PLAYER_MOVE_SPEED, 0.0f );
         player_moved=TRUE;
         get_player(get_local_player_index())->facing=FACING_RIGHT;
     }
-    if ( keystate[SDLK_UP] )
+    if ( keystate[SDLK_UP] && !get_editing() )
     {
         move_player( get_local_player_index(), 0.0f, -5.0f * PLAYER_MOVE_SPEED );
         player_moved=TRUE;
     }
-    else if ( keystate[SDLK_DOWN] )
+    else if ( keystate[SDLK_DOWN] && !get_editing() )
     {
         move_player( get_local_player_index(), 0.0f, 5.0f * PLAYER_MOVE_SPEED );
         player_moved=TRUE;
     }
+
+    if ( !get_editing() )
+        move_camera_on_player( get_local_player_index() );
 
     if ( player_moved )
     {   
@@ -142,6 +145,7 @@ void process_sdl_events()
                     case SDLK_c: /* Open clients dialog */
                         if ( !get_server_active() && !get_client_active() )
                             show_client_dialog(FALSE);
+                            show_server_dialog(FALSE);
                         break;
                     case SDLK_t: /* Open chat dialog */
                         if ( get_server_active() || get_client_active() )

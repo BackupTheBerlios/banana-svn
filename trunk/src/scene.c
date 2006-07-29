@@ -48,8 +48,6 @@ void render_scene()
 
     /* Draw the map */
     glPushMatrix();
-     glTranslatef( -get_camera_x(), -get_camera_y(), 0.0f );
-     /*glRotatef( 45.0f, 0.0f, 0.0f, 1.0f );*/
      glColor3f( 1.0f, 1.0f, 1.0f );
      draw_map();
     glPopMatrix();
@@ -66,10 +64,10 @@ void render_scene()
          dialog=gg_get_dialog(i);
          glEnable(GL_BLEND);
          glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-         if (i==gg_dialog_count()-1)
+         /*if (i==gg_dialog_count()-1)*/
             gg_dialog_set_trans( 1.0f );
-         else   
-            gg_dialog_set_trans( 0.5f );
+         /*else   
+            gg_dialog_set_trans( 0.5f );*/
          gg_dialog_render(dialog);
          glDisable(GL_BLEND);
         glPopMatrix();        
@@ -114,25 +112,25 @@ void render_scene()
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
         sprintf(temp, "FPS: %.2f", fps);
         gg_system_draw_string(temp, 5, 5, &col_red, 0, 0, 0);
-        glTranslatef(0.0f,17.0f,0.0f);
+        /*glTranslatef(0.0f,17.0f,0.0f);
         sprintf(temp, "Net In: %i", *get_pps_in());
         gg_system_draw_string(temp, 5, 5, &col_red, 0, 0, 0);
         glTranslatef(0.0f,17.0f,0.0f);
         sprintf(temp, "Net Out: %i", *get_pps_out());
-        gg_system_draw_string(temp, 5, 5, &col_red, 0, 0, 0);
+        gg_system_draw_string(temp, 5, 5, &col_red, 0, 0, 0);*/
         glDisable(GL_BLEND);
         glPopMatrix();
     }
 
     /* temp */
-    glPushMatrix();
+    /*glPushMatrix();
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
     glTranslatef(0.0f,17.0f*4,0.0f);
     sprintf(temp, "Animation frames per second: %.2f", get_player(get_local_player_index())->current_anim->speed);
     gg_system_draw_string(temp, 5, 5, &col_red, 0, 0, 0);
     glDisable(GL_BLEND);
-    glPopMatrix();
+    glPopMatrix();*/
     /* temp */
 
     /* Swap the buffers. */

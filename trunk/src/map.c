@@ -22,8 +22,10 @@ void set_tile( layer *lay, int xpos, int ypos, int index )
 void load_map( char *filename )
 {
     /* temporary */
-    player_layer = create_layer( 5, 5 );
-    obs_layer = create_layer( 5, 5 );
+    player_layer = create_layer( 50, 50 );
+    obs_layer = create_layer( 50, 50 );
+
+    player_layer->tiles[0]=3;
 }
 
 layer *get_player_layer()
@@ -57,21 +59,27 @@ layer *create_layer( int width, int height )
     return temp;    
 }
 
+void save_map( char *filename )
+{
+    FILE *f;
+    f=fopen( filename, "wb" );
+
+
+    fclose(f);
+}
+
 void draw_layer( layer *lay )
 {
-    int i=0, j=0;
+    int x=0, y=0;
+    int tiles_wide=SCREEN_WIDTH/TILE_SIZE;
+    int tiles_high=SCREEN_HEIGHT/TILE_SIZE;
 
-    for ( j=0; j<lay->width; j++ )
+    for (x=(get_camera_x()/TILE_SIZE);x<(get_camera_x()/TILE_SIZE)+tiles_wide;x++)
     {
         glPushMatrix();
-        for ( i=0; i<lay->height; i++ )
+        for ( y=(get_camera_y()/TILE_SIZE); y<(get_camera_y()/TILE_SIZE)+tiles_high; y++ )
         {
-            draw_tile(lay->tiles[(i*lay->width)+j]);
-
-            glPushMatrix();    
-            glTranslatef( 0.0f, 10.0f, 0.0f );
-            glPopMatrix();
-
+            draw_tile(lay->tiles[(y*lay->width)+x]);
             glTranslatef( 0.0f, 32.0f, 0.0f );
         }
         glPopMatrix();
@@ -81,5 +89,6 @@ void draw_layer( layer *lay )
 
 void draw_map()
 {
+    glTranslatef( -(int)get_camera_x()%32, -(int)get_camera_y()%32, 0.0f );
     draw_layer( get_player_layer() );
 }

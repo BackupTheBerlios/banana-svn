@@ -21,6 +21,12 @@ void set_camera( float xpos, float ypos )
    /* printf( "Camera: %f,%f\n", camera_x, camera_y ); */
 }
 
+void move_camera_on_player( int index )
+{
+    /* temporary */
+    set_camera( get_player(index)->xpos-((SCREEN_WIDTH/2)-44), get_player(index)->ypos-((SCREEN_HEIGHT/2)-50) );
+}
+
 float get_camera_x()
 {
     return camera_x;
