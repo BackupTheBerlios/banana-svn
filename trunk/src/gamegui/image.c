@@ -44,6 +44,9 @@ void gg_image_render(gg_widget_t *widget, int x, int y, int focus)
     float factor;
     gg_rect_t source, dest;
 
+    /* for banana.. */
+    focus=GG_FOCUS_NONE;
+
     if (phase < 0.5f)
         factor = 1.0f + IMAGE_SCALE * phase * 2;
     else
@@ -64,7 +67,7 @@ void gg_image_render(gg_widget_t *widget, int x, int y, int focus)
     source.x = 0;
     source.y = 0;
     source.width = image->width;
-    source.height = image->width;
+    source.height = image->height;
 
     gg_system_draw_image(image->image, source, dest, GG_MODE_SCALE, GG_MODE_SCALE, &col_white, FALSE);
 }

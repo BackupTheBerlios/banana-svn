@@ -34,13 +34,13 @@ void draw_anim( anim_t *a, int frame, int xpos, int ypos, int flip )
     v1=a->frames[frame].vpos; v2=a->frames[frame].vpos+a->vheight;
 
     glBegin( GL_QUADS ); 
-        glTexCoord2f( u1, v1 ); /* Top Left */
+        glTexCoord2f( u1, v2 ); /* Top Left */
         glVertex3f( 0.0f,  0.0f, 0.0f );
-        glTexCoord2f( u2, v1 ); /* Top Right */
+        glTexCoord2f( u2, v2 ); /* Top Right */
         glVertex3f( a->width*2, 0.0f, 0.0f );
-        glTexCoord2f( u2, v2 ); /* Bottom Right */
+        glTexCoord2f( u2, v1 ); /* Bottom Right */
         glVertex3f( a->width*2, a->height*2,  0.0f );
-        glTexCoord2f( u1, v2 ); /* Bottom Left */
+        glTexCoord2f( u1, v1 ); /* Bottom Left */
         glVertex3f( 0.0f,  a->height*2,  0.0f );
     glEnd( ); 
 

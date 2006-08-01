@@ -41,6 +41,8 @@
 #define FACING_RIGHT        0
 #define FACING_LEFT         1
 
+#define TILE_SIZE   32
+
 /* structs */
 typedef struct texture
 {
@@ -109,6 +111,13 @@ typedef struct player
     TCPsocket socket;
 }player_t;
 
+typedef struct layer
+{
+    int width, height;
+    char *tiles;
+
+}layer_t;
+
 /* main.c */
 int get_videoflags();
 void quit( int returnCode );
@@ -137,36 +146,34 @@ texture_t *get_framebuffer_grab();
 void draw_texture(texture_t *texture, gg_rect_t source, gg_rect_t dest, int mode_h, int mode_v, gg_colour_t *colour, int effect );
 
 /* tilebay.c */
-#define TILE_SIZE   32
-texture_t *get_tilebay();
+texture_t *get_tilebay_addr();
+texture_t *get_tile_tex( int index );
 void load_tilebay( char *filename );
 void draw_tile( int index );
+int get_tile_count();
 
 /* map.c */
-typedef struct layer
-{
-    int width, height;
-    char *tiles;
-
-}layer;
-
-void set_tile( layer *lay, int xpos, int ypos, int index );
-int get_tile( layer *lay, int xpos, int ypos );
+void set_tile( layer_t *lay, int xpos, int ypos, int index );
+int get_tile( layer_t *lay, int xpos, int ypos );
+layer_t *get_player_layer();
+layer_t *get_obs_layer();
+layer_t *create_layer( int width, int height );
+void save_map( char *filename );
 void load_map( char *filename );
-layer *get_player_layer();
-layer *get_obs_layer();
-layer *create_layer( int width, int height );
 
 /* draw_map.c */
-void draw_layer( layer *lay );
+void draw_layer( layer_t *lay );
 void draw_map();
 
 /* mouse.c */
+#define BUTTON_WHICH    98
+#define BUTTON_ANY      99
+void update_mouse();
 void draw_mouse_cursor();
 void load_mouse_cursor( char *filename );
+int get_mouse_button( int button );
 int get_mouse_x();
 int get_mouse_y();
-void process_mouse();
 
 /* camera.c */
 void set_camera( float xpos, float ypos );
@@ -259,15 +266,27 @@ int get_editmode();
 int get_editing();
 void set_editing( int edit );
 void draw_edit_widgets();
+void set_tile_slot( int index, int tile );
+int get_tile_slot( int index );
 
 /* anim.c */
 void draw_anim( anim_t *a, int frame, int xpos, int ypos, int flip );
 
 /* Dialogs. */
+#define NONE_DIALOG             0
+#define SERVER_DIALOG           1
+#define CLIENT_DIALOG           2
+#define CHAT_DIALOG             3
+#define CURRENT_TILES_DIALOG    4
+#define TILE_SELECT_DIALOG      5 
+
 void show_title_dialog( int modal );
 void show_server_dialog( int modal );
 void show_client_dialog( int modal );
 void show_chat_dialog( int modal );
 void show_mesg_dialog( char *message );
+void show_tile_select_dialog( int slot );
+void show_current_tiles_dialog();
+void change_current_tiles_dialog_slot( int slot, int index );
 
 #endif /* __MAIN_H */

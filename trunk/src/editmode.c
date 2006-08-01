@@ -9,6 +9,19 @@ static gg_colour_t col_white =
 static int editmode=EDITING_PLAYER_LAYER;
 static int editing=FALSE;
 
+int tile_slots[3];
+
+void set_tile_slot( int index, int tile )
+{
+    tile_slots[index]=tile;
+    change_current_tiles_dialog_slot( index, tile );
+}
+
+int get_tile_slot( int index )
+{
+    return tile_slots[index];
+}
+
 int get_editmode()
 {
     return editmode;
@@ -22,6 +35,9 @@ int get_editing()
 void set_editing( int edit )
 {
     editing=edit;
+
+    if (editing)
+        show_current_tiles_dialog();
 }
 
 void draw_edit_widgets()
@@ -38,7 +54,7 @@ void draw_edit_widgets()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
 
-    sprintf( temp_str, "Editing: Obstruction Layer" );
+    sprintf( temp_str, "Editing: Player Layer" );
     gui_get_string_size(temp_str, &area.width, &area.height);
     area.width+=size;
 

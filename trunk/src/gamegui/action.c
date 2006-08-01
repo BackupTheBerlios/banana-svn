@@ -44,7 +44,7 @@ int gg_action_input(gg_widget_t *widget, gg_event_t event)
 
     if ((event.type == GG_EVENT_KEY && event.key == GG_KEY_ACTION)
             || (event.type == GG_EVENT_MOUSE &&
-                event.mouse.type == GG_MOUSE_BUTTON_DOWN &&
+                event.mouse.type == GG_MOUSE_BUTTON_UP &&
                 event.mouse.button == 0))
     {
         if (action->func)

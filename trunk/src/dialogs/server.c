@@ -48,12 +48,12 @@ static gg_dialog_t *create_server_dialog( int modal )
 
     vbox = gg_vbox_create(0);
 
-    hbox = gg_hbox_create(0);  
-    widget = gg_button_create("Cancel");
-    gg_button_set_callback(GG_BUTTON(widget), close, NULL);        
+    hbox = gg_hbox_create(0);      
+    widget = gg_label_create("Nickname: ");
+    gg_label_set_colour(GG_LABEL(widget), &col_white, &col_trans );
     gg_container_append(GG_CONTAINER(hbox), widget);
-    widget = gg_button_create("Start");
-    gg_button_set_callback(GG_BUTTON(widget), start, NULL);        
+    widget = gg_entry_create();
+    gg_entry_set_change_callback(GG_ENTRY(widget), name_changed, NULL); 
     gg_container_append(GG_CONTAINER(hbox), widget);
     gg_container_append(GG_CONTAINER(vbox), hbox);
 
@@ -66,16 +66,16 @@ static gg_dialog_t *create_server_dialog( int modal )
     gg_container_append(GG_CONTAINER(hbox), widget);
     gg_container_append(GG_CONTAINER(vbox), hbox);
 
-    hbox = gg_hbox_create(0);      
-    widget = gg_label_create("Nickname: ");
-    gg_label_set_colour(GG_LABEL(widget), &col_white, &col_trans );
+    hbox = gg_hbox_create(0);  
+    widget = gg_button_create("Cancel");
+    gg_button_set_callback(GG_BUTTON(widget), close, NULL);        
     gg_container_append(GG_CONTAINER(hbox), widget);
-    widget = gg_entry_create();
-    gg_entry_set_change_callback(GG_ENTRY(widget), name_changed, NULL); 
+    widget = gg_button_create("Start");
+    gg_button_set_callback(GG_BUTTON(widget), start, NULL);        
     gg_container_append(GG_CONTAINER(hbox), widget);
     gg_container_append(GG_CONTAINER(vbox), hbox);
 
-    dialog = gg_dialog_create(vbox, "Start Server");
+    dialog = gg_dialog_create(vbox, "Start Server", SERVER_DIALOG);
     if (modal)
         gg_dialog_set_modal(GG_DIALOG(dialog), 1);
     gg_dialog_set_position(GG_DIALOG(dialog), 320, 300, 0.5f, 0.0f);
@@ -86,6 +86,6 @@ static gg_dialog_t *create_server_dialog( int modal )
 
 void show_server_dialog( int modal )
 { 
-   if (!gg_dialog_current())
+   /*if (!gg_dialog_current())*/
         gg_dialog_open(create_server_dialog(modal));
 }

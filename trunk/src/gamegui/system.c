@@ -136,6 +136,7 @@ void gg_system_draw_image(void *image, gg_rect_t source, gg_rect_t dest, int mod
         dest_c = gg_clipping_rect(&dest, clip);
         x_offset = dest_c.x - dest.x;
         y_offset = dest.y + dest.height - dest_c.y - dest_c.height;
+        
 
         switch (mode_h)
         {

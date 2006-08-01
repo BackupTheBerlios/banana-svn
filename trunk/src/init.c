@@ -81,7 +81,7 @@ void resize_window( int width, int height )
     glViewport( 0, 0, ( GLsizei )width, ( GLsizei )height );
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity( );
-    glOrtho(0,640,480,0,0,100);	
+    glOrtho(0,640,0,480,0,100);	
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity( );
 }

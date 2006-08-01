@@ -15,6 +15,11 @@ void gameloop()
     render_scene();
 }
 
+int mouse_over_dialog()
+{
+    return gg_dialog_mouse_over_any( get_mouse_x(), get_mouse_y() );
+}
+
 void process_sdl_events()
 {
     SDL_Event event;
@@ -25,26 +30,29 @@ void process_sdl_events()
     SDL_PumpEvents(); 
 
     keystate = SDL_GetKeyState(NULL);
+    update_mouse();
 
     /* Editing */
     if (get_editing())
     {
         /* Camera controls */
-        if ( keystate[SDLK_LEFT] )
-           set_camera( get_camera_x()-10, get_camera_y() );
-        if ( keystate[SDLK_RIGHT] )
-           set_camera( get_camera_x()+10, get_camera_y() );
-        if ( keystate[SDLK_UP] )
-           set_camera( get_camera_x(), get_camera_y()-10 );
-        if ( keystate[SDLK_DOWN] )
-           set_camera( get_camera_x(), get_camera_y()+10 );
+        if ( keystate[SDLK_LEFT] && !mouse_over_dialog())
+           set_camera( get_camera_x()-(10* PLAYER_MOVE_SPEED), get_camera_y() );
+        if ( keystate[SDLK_RIGHT] && !mouse_over_dialog())
+           set_camera( get_camera_x()+(10* PLAYER_MOVE_SPEED), get_camera_y() );
+        if ( keystate[SDLK_UP] && !mouse_over_dialog())
+           set_camera( get_camera_x(), get_camera_y()+(10* PLAYER_MOVE_SPEED) );
+        if ( keystate[SDLK_DOWN] && !mouse_over_dialog())
+           set_camera( get_camera_x(), get_camera_y()-(10* PLAYER_MOVE_SPEED) );
 
         /* Mouse */
-        if( SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(1) )
+        if( get_mouse_button(BUTTON_ANY) && !mouse_over_dialog())
         {        
-            if ( get_tile(get_player_layer(), (get_camera_x()+get_mouse_x())/32, (get_camera_y()+get_mouse_y())/32 ) !=1 )
+            if ( get_tile(get_player_layer(), (get_camera_x()+get_mouse_x())/32, 
+                (get_camera_y()+get_mouse_y())/32 ) !=get_tile_slot(get_mouse_button(BUTTON_WHICH)) )
             {
-                set_tile(get_player_layer(), (get_camera_x()+get_mouse_x())/32, (get_camera_y()+get_mouse_y())/32, 1);
+                set_tile(get_player_layer(), (get_camera_x()+get_mouse_x())/32, 
+                    (get_camera_y()+get_mouse_y())/32, get_tile_slot(get_mouse_button(BUTTON_WHICH)));
     
                 /* TEMporary!!!*/
                 net_change_tile( (get_camera_x()+get_mouse_x())/32, (get_camera_y()+get_mouse_y())/32 );
@@ -54,26 +62,26 @@ void process_sdl_events()
     }
 
     /* temporary.. move player.. */
-    if ( keystate[SDLK_LEFT] && !get_editing() )
+    if ( keystate[SDLK_LEFT] && !get_editing() && !mouse_over_dialog())
     {
         move_player( get_local_player_index(), -5.0f * PLAYER_MOVE_SPEED, 0.0f );
         player_moved=TRUE;
         get_player(get_local_player_index())->facing=FACING_LEFT;
     }
-    else if ( keystate[SDLK_RIGHT] && !get_editing() )
+    else if ( keystate[SDLK_RIGHT] && !get_editing() && !mouse_over_dialog())
     {
         move_player( get_local_player_index(), 5.0f * PLAYER_MOVE_SPEED, 0.0f );
         player_moved=TRUE;
         get_player(get_local_player_index())->facing=FACING_RIGHT;
     }
-    if ( keystate[SDLK_UP] && !get_editing() )
-    {
-        move_player( get_local_player_index(), 0.0f, -5.0f * PLAYER_MOVE_SPEED );
-        player_moved=TRUE;
-    }
-    else if ( keystate[SDLK_DOWN] && !get_editing() )
+    if ( keystate[SDLK_UP] && !get_editing() && !mouse_over_dialog())
     {
         move_player( get_local_player_index(), 0.0f, 5.0f * PLAYER_MOVE_SPEED );
+        player_moved=TRUE;
+    }
+    else if ( keystate[SDLK_DOWN] && !get_editing() && !mouse_over_dialog())
+    {
+        move_player( get_local_player_index(), 0.0f, -5.0f * PLAYER_MOVE_SPEED );
         player_moved=TRUE;
     }
 
@@ -105,7 +113,7 @@ void process_sdl_events()
             if (event.type == SDL_MOUSEMOTION)
             {              
                 gg_dialog_t *dialog = gg_dialog_current();               
-                gg_dialog_mouse_movement(dialog, event.motion.x, event.motion.y);
+                gg_dialog_mouse_movement(dialog, event.motion.x, 479-event.motion.y);
             }
 
             /* Keyboard! */
@@ -145,20 +153,28 @@ void process_sdl_events()
                     case SDLK_c: /* Open clients dialog */
                         if ( !get_server_active() && !get_client_active() )
                             show_client_dialog(FALSE);
-                            show_server_dialog(FALSE);
                         break;
                     case SDLK_t: /* Open chat dialog */
                         if ( get_server_active() || get_client_active() )
                             show_chat_dialog(FALSE);
                         break;
+                    case SDLK_w: /* Write map to disk */
+                        save_map( "data/test.map" );
+                        break;
+                    case SDLK_l: /* Load map from disk */
+                        load_map( "data/test.map" );
+                        break;
+                    case SDLK_j:
+                        set_tile_slot(0,get_tile_slot(0)+1);
+                        break;
+                    case SDLK_k:
+                        set_tile_slot(0,get_tile_slot(0)-1);
+                        break;
                     case SDLK_e: /* Toggle edit mode */
-                        if (!gg_dialog_current())
-                        {
-                            if (get_editing())
-                                set_editing(FALSE);
-                            else
-                                set_editing(TRUE);
-                        }
+                        if (get_editing())
+                            set_editing(FALSE);
+                        else
+                            set_editing(TRUE);
                         break;
                     default:
                         break;

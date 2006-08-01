@@ -46,13 +46,13 @@ static void draw_texture_uv( texture_t *texture, float xpos,
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, mode_v);
 
     glBegin(GL_QUADS);
-    glTexCoord2f(u1, v1);
-    glVertex3f( xpos, ypos, zpos );
-    glTexCoord2f(u2, v1);
-    glVertex3f( xpos+width*scale, ypos, zpos );
-    glTexCoord2f(u2, v2);
-    glVertex3f( xpos+width*scale, ypos+height*scale, zpos );
     glTexCoord2f(u1, v2);
+    glVertex3f( xpos, ypos, zpos );
+    glTexCoord2f(u2, v2);
+    glVertex3f( xpos+width*scale, ypos, zpos );
+    glTexCoord2f(u2, v1);
+    glVertex3f( xpos+width*scale, ypos+height*scale, zpos );
+    glTexCoord2f(u1, v1);
     glVertex3f( xpos, ypos+height*scale, zpos );
     glEnd();
 
@@ -100,7 +100,7 @@ void draw_texture(texture_t *texture, gg_rect_t source, gg_rect_t dest, int mode
     if (effect == 1)
     {
         glPushMatrix();
-        glTranslatef( 2.0f, 2.0f, 0.0f );
+        glTranslatef( 2.0f, -2.0f, 0.0f );
         draw_texture_uv(texture, dest.x, dest.y, dest.width, dest.height, 0.0f, &col_black, 
             xsrc, ysrc, xsrc + width, ysrc + height, en_h, en_v, 1.0f);
         glPopMatrix();
@@ -189,6 +189,17 @@ void gui_draw_rect(int x, int y, int w, int h, gg_colour_t *col)
     glVertex3f(x + 0.5f, y + h + 0.5f, 1.0f);
     glEnd();
 }
+
+/*void draw_rect(int x, int y, int w, int h, gg_colour_t *col)
+{
+    glColor4f(col->r, col->g, col->b, col->a);
+    glBegin(GL_LINE_LOOP);
+    glVertex3f(x + 0.5f, y + 0.5f, 1.0f);
+    glVertex3f(x + w + 0.5f, y + 0.5f, 1.0f);
+    glVertex3f(x + w + 0.5f, y + h + 0.5f, 1.0f);
+    glVertex3f(x + 0.5f, y + h + 0.5f, 1.0f);
+    glEnd();
+}*/
 
 void gui_draw_rect_fill(int x, int y, int w, int h, 
     gg_colour_t *top_left, gg_colour_t *top_right, gg_colour_t *bottom_left, gg_colour_t *bottom_right, int start_right )
@@ -341,8 +352,8 @@ void init_gui()
     
     style_menu.textured = 1;
     style_menu.fade_col = gg_colour(1.0f, 0.0f, 0.0f, 1.0f);
-    style_menu.hor_pad = 20;
-    style_menu.vert_pad = 10;
+    style_menu.hor_pad = 5;
+    style_menu.vert_pad = 5;
 
     load_border( menu_border, "data/menu_border.png");
 
@@ -451,7 +462,7 @@ gg_event_t convert_event(SDL_Event *event)
         gg_event.mouse.type = GG_MOUSE_BUTTON_DOWN;
         gg_event.mouse.button = event->button.button - 1;
         gg_event.mouse.x = event->button.x;
-        gg_event.mouse.y = event->button.y;
+        gg_event.mouse.y = 479-event->button.y;
         break;
 
     case SDL_MOUSEBUTTONUP:
@@ -459,7 +470,7 @@ gg_event_t convert_event(SDL_Event *event)
         gg_event.mouse.type = GG_MOUSE_BUTTON_UP;
         gg_event.mouse.button = event->button.button - 1;
         gg_event.mouse.x = event->button.x;
-        gg_event.mouse.y = event->button.y;
+        gg_event.mouse.y = 479-event->button.y;
         break;
     }
 

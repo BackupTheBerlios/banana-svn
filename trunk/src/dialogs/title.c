@@ -42,7 +42,7 @@ static gg_dialog_t *create_title_dialog( int modal )
     gg_label_set_colour(GG_LABEL(widget), &col_white, &col_trans );
     gg_container_append(GG_CONTAINER(vbox), widget);
 
-    dialog = gg_dialog_create(vbox, NULL);
+    dialog = gg_dialog_create(vbox, NULL, NONE_DIALOG);
     if (modal)
         gg_dialog_set_modal(GG_DIALOG(dialog), 1);
     gg_dialog_set_position(GG_DIALOG(dialog), 320, 300, 0.5f, 0.0f);

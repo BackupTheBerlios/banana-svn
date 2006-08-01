@@ -47,7 +47,8 @@
     char *titlebar;                                                          \
     int moving;                                                              \
     int move_xoffset;                                                        \
-    int move_yoffset;                                            
+    int move_yoffset;                                                        \
+    int dialog_id;                                            
 
 /* FIXME */
 /** Screen width in pixels. */
@@ -210,14 +211,18 @@ float gg_dialog_trans();
 
 void gg_dialog_set_position(gg_dialog_t *dialog, int x, int y, float x_align, float y_align);
 
-void gg_dialog_init(gg_dialog_t *dialog, gg_widget_t *child, char *titlebar);
+void gg_dialog_init(gg_dialog_t *dialog, gg_widget_t *child, char *titlebar, int id);
 
 void gg_dialog_set_style(gg_dialog_t *dialog, gg_dialog_style_t *style);
 
-gg_widget_t *gg_dialog_create(gg_widget_t *child, char *titlebar);
+gg_widget_t *gg_dialog_create(gg_widget_t *child, char *titlebar, int id);
 
 gg_class_id gg_dialog_get_class_id();
 
 void draw_border(void *image[9], gg_rect_t area, int size, char *titlebar, int active);
+
+int gg_dialog_mouse_over_any( int x, int y );
+
+int gg_dialog_is_open_by_id( int id );
 
 #endif /* GAMEGUI_DIALOG_H */

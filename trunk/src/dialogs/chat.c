@@ -31,7 +31,7 @@ static gg_dialog_t *create_chat_dialog( int modal )
     gg_set_requested_size(widget,500,0);
     gg_container_append(GG_CONTAINER(vbox), widget);
     
-    dialog = gg_dialog_create(vbox, NULL);
+    dialog = gg_dialog_create(vbox, NULL, CHAT_DIALOG);
     gg_dialog_set_position(GG_DIALOG(dialog), 320, 375, 0.5f, 0.0f);
     gg_dialog_set_style(GG_DIALOG(dialog), get_menu_style() );
 

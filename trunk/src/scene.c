@@ -18,6 +18,11 @@ static gg_colour_t col_red =
     1.0f, 0.0f, 0.0f, 1.0f
 };
 
+static gg_colour_t col_fade =
+{
+    0.0f, 0.0f, 0.0f, 0.7f
+};
+
 static int fps_enabled = 0;
 static int frames = 0;
 static Uint32 fps_time = 0;
@@ -35,6 +40,7 @@ void render_scene()
     static Uint32 last = 0;
     Uint32 now;
     char temp[80];
+    int modal_dialog=FALSE;
     int i;
 
     fps_enabled=TRUE;
@@ -46,12 +52,16 @@ void render_scene()
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     glLoadIdentity();
 
+    /* Is the current dialog modal? */
+    if ( gg_dialog_current() && gg_dialog_current()->modal )
+        modal_dialog=TRUE;
+
     /* Draw the map */
     glPushMatrix();
      glColor3f( 1.0f, 1.0f, 1.0f );
      draw_map();
     glPopMatrix();
-
+    
     /* Draw players */
     glPushMatrix();
      draw_players();
@@ -64,11 +74,16 @@ void render_scene()
          dialog=gg_get_dialog(i);
          glEnable(GL_BLEND);
          glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-         /*if (i==gg_dialog_count()-1)*/
-            gg_dialog_set_trans( 1.0f );
-         /*else   
-            gg_dialog_set_trans( 0.5f );*/
+         gg_dialog_set_trans( 1.0f );  
+
+         if ( modal_dialog && dialog==gg_dialog_current() )
+         {
+            gg_system_draw_gradient_rect(0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 
+                &col_fade, &col_fade, &col_fade, &col_fade, FALSE );
+         }
+     
          gg_dialog_render(dialog);
+
          glDisable(GL_BLEND);
         glPopMatrix();        
     }

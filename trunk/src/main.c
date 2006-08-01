@@ -15,6 +15,9 @@ int main( int argc, char *argv[])
     /* temp! */
     load_player_tex();
     init_player_animations();
+    set_tile_slot(0,1);
+    set_tile_slot(1,2);
+    set_tile_slot(2,0);
 
     set_camera( 0.0f, 0.0f );
 
