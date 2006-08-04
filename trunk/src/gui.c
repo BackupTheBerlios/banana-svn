@@ -3,6 +3,7 @@
 
 gg_dialog_style_t style_menu;
 texture_t menu_border[9];
+texture_t widget_images[8];
 
 int gui_transition=FALSE;
 float gui_transition_inc=0.0f;
@@ -144,6 +145,34 @@ void draw_glow( int x, int y, int width, int height, int glow_width, gg_colour_t
     /* Middle */
     if (middle)
         gg_system_draw_gradient_rect( x, y, width, height, &solid, &solid, &solid, &solid, FALSE); 
+}
+
+static void load_widget_images(texture_t border[8], char *filename)
+{
+    /* Create storage space for the texture */
+    SDL_Surface *surface;
+
+    /* Load The Bitmap, Check For Errors, If Bitmap's Not Found Quit */
+    if ((surface = IMG_Load(filename)))
+    {
+        int i;
+        for (i = 0; i < 8; i++)
+        {
+            SDL_Rect rect;
+            rect.x = (i % 4) * surface->w / 4;
+            rect.y = (i / 4) * surface->h / 2;
+            rect.w = surface->w / 4;
+            rect.h = surface->h / 2;
+            border[i] = SDL_GL_LoadTexture(surface, &rect, 1);
+        }
+        /* Free up any memory we may have used */
+        SDL_FreeSurface(surface);
+    }
+    else
+    {
+        fprintf(stderr, "Could not load texture: %s!\n", filename);
+        exit(1);
+    }
 }
 
 static void load_border(texture_t border[9], char *filename)
@@ -356,9 +385,15 @@ void init_gui()
     style_menu.vert_pad = 5;
 
     load_border( menu_border, "data/menu_border.png");
+    load_widget_images( widget_images, "data/widgets.png" );
+
+    for (i = 0; i < 8; i++)
+        style_menu.widget_images[i] = &widget_images[i];
 
     for (i = 0; i < 9; i++)
         style_menu.border.textured.image[i] = &menu_border[i];
+
+    gg_dialog_set_current_style( &style_menu );
 }
 
 gg_event_t convert_event(SDL_Event *event)

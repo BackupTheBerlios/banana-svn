@@ -121,6 +121,8 @@ typedef struct gg_dialog_style
      *  and the widget.
      */
     int vert_pad;
+
+    void *widget_images[8];
 }
 gg_dialog_style_t;
 
@@ -224,5 +226,9 @@ void draw_border(void *image[9], gg_rect_t area, int size, char *titlebar, int a
 int gg_dialog_mouse_over_any( int x, int y );
 
 int gg_dialog_is_open_by_id( int id );
+
+void gg_dialog_set_current_style( gg_dialog_style_t *style );
+
+gg_dialog_style_t *gg_dialog_get_current_style();
 
 #endif /* GAMEGUI_DIALOG_H */

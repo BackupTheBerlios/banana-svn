@@ -1,10 +1,10 @@
 
 #include "main.h"
 
-static gg_colour_t col_white =
+/*static gg_colour_t col_white =
 {
     1.0f, 1.0f, 1.0f, 1.0f
-};
+};*/
 
 static int editmode=EDITING_PLAYER_LAYER;
 static int editing=FALSE;
@@ -42,6 +42,7 @@ void set_editing( int edit )
 
 void draw_edit_widgets()
 {
+#ifdef FART
     char temp_str[80];
     gg_rect_t area;
     int size;
@@ -64,5 +65,5 @@ void draw_edit_widgets()
 
     glDisable(GL_BLEND);
     glPopMatrix();
-
+#endif
 }

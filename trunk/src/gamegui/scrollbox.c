@@ -20,6 +20,7 @@
 
 #include <gamegui/scrollbox.h>
 #include <gamegui/viewport.h>
+#include <gamegui/dialog.h>
 
 int scrollbar_width=16;
 
@@ -38,6 +39,11 @@ static gg_colour_t col_green =
         0.0f, 1.0f, 0.0f, 1.0f
     };
 
+static gg_colour_t col_white =
+    {
+        1.0f, 1.0f, 1.0f, 1.0f
+    };
+
 gg_class_id gg_scrollbox_get_class_id()
 {
     GG_CHILD(gg_bin_get_class_id())
@@ -49,25 +55,40 @@ void gg_scrollbox_render(gg_widget_t *widget, int x, int y, int focus)
     gg_widget_t *child = gg_bin_get_child(GG_BIN(widget));
     gg_scrollbox_t *scrollbox = GG_SCROLLBOX(widget);
     gg_widget_t *view_child = gg_bin_get_child(GG_BIN(child));
+    gg_rect_t source, dest;
     int sliderpos=1;
     int slidersize=16;
     float yscroll=GG_VIEWPORT(child)->yscroll;
+    gg_widget_t *parent=widget;
+    gg_dialog_style_t *style;
 
-    /* Draw scrollbar.. */
-    gg_system_draw_gradient_rect(x+widget->width-16.0f, y, 16, 16, 
-        &col_red, &col_red, &col_red, &col_red, FALSE );
+    source.x=source.y=0;
+    source.width=source.height=16;
 
-    gg_system_draw_gradient_rect(x+widget->width-16.0f, y+16, 16, widget->height-(32), 
-        &col_blue, &col_blue, &col_blue, &col_blue, FALSE );
+    /* Draw Top Left Corner */
+    dest.x = x+widget->width-16.0f; dest.y = y;
+    dest.width = 16; dest.height = 16;
+    gg_system_draw_image(gg_dialog_get_current_style()->widget_images[1], source, dest, 
+        GG_MODE_TILE, GG_MODE_SCALE, &col_white, FALSE);
 
-    gg_system_draw_gradient_rect(x+widget->width-16.0f, y+widget->height-16, 16, 16, 
-        &col_red, &col_red, &col_red, &col_red, FALSE );
+    dest.x = x+widget->width-16.0f; dest.y = y+16;
+    dest.width = 16; dest.height = widget->height-(32);
+    gg_system_draw_image(gg_dialog_get_current_style()->widget_images[4], source, dest, 
+        GG_MODE_TILE, GG_MODE_SCALE, &col_white, FALSE);
+
+    dest.x = x+widget->width-16.0f; dest.y = y+widget->height-16;
+    dest.width = 16; dest.height = 16;
+    gg_system_draw_image(gg_dialog_get_current_style()->widget_images[0], source, dest, 
+        GG_MODE_TILE, GG_MODE_SCALE, &col_white, FALSE);
 
     /* Draw the slider! */
     slidersize=((float)child->height/(float)view_child->height)*(widget->height-32);
     sliderpos=((widget->height-(32)+1-slidersize)*yscroll)-1;
-    gg_system_draw_gradient_rect(x+widget->width-16.0f, y+16+sliderpos, 16, slidersize, 
-        &col_green, &col_green, &col_green, &col_green, FALSE );
+
+    dest.x = x+widget->width-16.0f; dest.y = y+16+sliderpos;
+    dest.width = 16; dest.height = slidersize;
+    gg_system_draw_image(gg_dialog_get_current_style()->widget_images[7], source, dest, 
+        GG_MODE_TILE, GG_MODE_SCALE, &col_white, FALSE);
 
     child->render(child, x, y, GG_FOCUS_NONE);
 }

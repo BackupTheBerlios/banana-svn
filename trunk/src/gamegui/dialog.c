@@ -73,6 +73,18 @@ int dialog_closed_nr = 0;
 
 float global_dialog_trans=1.0f;
 
+static gg_dialog_style_t *current_style;
+
+void gg_dialog_set_current_style( gg_dialog_style_t *style )
+{
+    current_style=style;
+}
+
+gg_dialog_style_t *gg_dialog_get_current_style()
+{
+    return current_style;
+}
+
 int gg_dialog_is_open_by_id( int id )
 {
     int i=0;

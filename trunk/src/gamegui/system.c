@@ -23,6 +23,7 @@
 #include <gamegui/system.h>
 #include <gamegui/widget.h>
 #include <gamegui/clipping.h>
+#include <gamegui/dialog.h>
 
 static int classes = 0;
 static gg_class_id *parent_class = NULL;

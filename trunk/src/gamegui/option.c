@@ -21,6 +21,7 @@
 #include <gamegui/option.h>
 #include <gamegui/label.h>
 #include <gamegui/align.h>
+#include <gamegui/dialog.h>
 
 static gg_colour_t col_dark_red =
     {
@@ -32,6 +33,16 @@ static gg_colour_t col_black =
         0.0f, 0.0f, 0.0f, 1.0f
     };
 
+static gg_colour_t col_blue =
+{
+    0.0f, 1.0f, 1.0f, 1.0f
+};
+
+static gg_colour_t col_white =
+{
+    1.0f, 1.0f, 1.0f, 1.0f
+};
+
 static gg_colour_t col_grey =
     {
         0.5f, 0.5f, 0.5f, 1.0f
@@ -42,8 +53,8 @@ gg_class_id gg_option_get_class_id()
     GG_CHILD(gg_select_get_class_id())
 }
 
-#define OPTION_ARROW_LEFT "\253 "
-#define OPTION_ARROW_RIGHT " \273"
+#define OPTION_ARROW_LEFT "<"
+#define OPTION_ARROW_RIGHT ">"
 
 /** Implements widget::render for option widgets. */
 void gg_option_render(gg_widget_t *widget, int x, int y, int focus)
@@ -54,39 +65,52 @@ void gg_option_render(gg_widget_t *widget, int x, int y, int focus)
     int border_l;
     int border_r;
     int height;
-
     gg_system_get_string_size(OPTION_ARROW_LEFT, &border_l, &height);
     gg_system_get_string_size(OPTION_ARROW_RIGHT, &border_r, NULL);
+    gg_rect_t source, dest;
 
     yy = y + option->height_a / 2 - height / 2;
+
+    source.x=source.y=0;
+    source.width=source.height=16;
 
     if (option->sel == -1)
         return;
     if (option->sel > 0)
     {
-        if (focus != GG_FOCUS_NONE)
-            gg_system_draw_string(OPTION_ARROW_LEFT, x, yy, &col_dark_red, 1, 1, 0);
+        dest.x = x; dest.y = yy;
+        dest.width = 16; dest.height = 16;
+        gg_system_draw_image(gg_dialog_get_current_style()->widget_images[2], source, dest, 
+            GG_MODE_TILE, GG_MODE_SCALE, &col_white, FALSE);
+
+     /*   if (focus != GG_FOCUS_NONE)
+            gg_system_draw_string(OPTION_ARROW_LEFT, x, yy, &col_blue, 1, 1, 0);
         else
-            gg_system_draw_string(OPTION_ARROW_LEFT, x, yy, &col_black, 0, 1, 0);
+            gg_system_draw_string(OPTION_ARROW_LEFT, x, yy, &col_white, 0, 1, 0);*/
     }
-    else
-        gg_system_draw_string(OPTION_ARROW_LEFT, x, yy, &col_grey, 0, 1, 0);
+    /*else
+        gg_system_draw_string(OPTION_ARROW_LEFT, x, yy, &col_grey, 0, 1, 0);*/
 
     xx = x + border_l;
 
     child = gg_container_get_child(GG_CONTAINER(widget), option->sel);
-    child->render(child, xx, y, focus);
+    child->render(child, xx, y, GG_FOCUS_NONE);
     xx = x + option->width_a - border_r;
 
     if (option->sel < gg_container_get_size(GG_CONTAINER(widget)) - 1)
     {
-        if (focus != GG_FOCUS_NONE)
-            gg_system_draw_string(OPTION_ARROW_RIGHT, xx, yy, &col_dark_red, 1, 1, 0);
+        dest.x = xx; dest.y = yy;
+        dest.width = 16; dest.height = 16;
+        gg_system_draw_image(gg_dialog_get_current_style()->widget_images[3], source, dest, 
+            GG_MODE_TILE, GG_MODE_SCALE, &col_white, FALSE);
+
+    /*    if (focus != GG_FOCUS_NONE)
+            gg_system_draw_string(OPTION_ARROW_RIGHT, xx, yy, &col_blue, 1, 1, 0);
         else
-            gg_system_draw_string(OPTION_ARROW_RIGHT, xx, yy, &col_black, 0, 1, 0);
+            gg_system_draw_string(OPTION_ARROW_RIGHT, xx, yy, &col_white, 0, 1, 0);*/
     }
-    else
-        gg_system_draw_string(OPTION_ARROW_RIGHT, xx, yy, &col_grey, 0, 1, 0);
+    /*else
+        gg_system_draw_string(OPTION_ARROW_RIGHT, xx, yy, &col_grey, 0, 1, 0);*/
 }
 
 /** Implements widget::input for option widgets. */

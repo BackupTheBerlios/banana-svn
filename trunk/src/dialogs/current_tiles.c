@@ -24,11 +24,18 @@ static void open_selector(gg_widget_t *widget, void *data)
     show_tile_select_dialog((int)data);
 }
 
+static void edit_layer_changed(gg_widget_t *widget, void *data)
+{
+    printf( "Now selected be %i\n", GG_OPTION(widget)->sel );
+    
+}
+
 static gg_dialog_t *create_current_tiles_dialog()
 {
     gg_widget_t *dialog;
     gg_widget_t *hbox;
     gg_widget_t *widget;
+    gg_widget_t *vbox;
 
     hbox = gg_hbox_create(0);
 
@@ -47,8 +54,19 @@ static gg_dialog_t *create_current_tiles_dialog()
     gg_action_set_callback(GG_ACTION(widget), open_selector, (int*)2);
     gg_container_append(GG_CONTAINER(hbox), widget);
  
-    dialog = gg_dialog_create(hbox, "Tiles", CURRENT_TILES_DIALOG);
-    gg_dialog_set_position(GG_DIALOG(dialog), 510, 395, 0.0f, 0.0f);
+    vbox = gg_vbox_create(0);
+    gg_container_append(GG_CONTAINER(vbox), hbox);
+
+    widget = gg_option_create();
+    gg_option_append_label(GG_OPTION(widget), "PL", 0.5f, 0.0f);
+    gg_option_append_label(GG_OPTION(widget), "FG", 0.5f, 0.0f);
+    gg_option_append_label(GG_OPTION(widget), "Obs", 0.5f, 0.0f);
+
+    gg_option_set_callback(GG_OPTION(widget), edit_layer_changed, NULL);
+    gg_container_append(GG_CONTAINER(vbox), widget);
+
+    dialog = gg_dialog_create(vbox, "Tiles", CURRENT_TILES_DIALOG);
+    gg_dialog_set_position(GG_DIALOG(dialog), 510, 375, 0.0f, 0.0f);
     gg_dialog_set_style(GG_DIALOG(dialog), get_menu_style() );
 
     return GG_DIALOG(dialog);
