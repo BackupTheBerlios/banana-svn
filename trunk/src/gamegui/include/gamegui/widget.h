@@ -35,7 +35,8 @@ enum
 enum
 {
     GG_MOUSE_BUTTON_DOWN,
-    GG_MOUSE_BUTTON_UP
+    GG_MOUSE_BUTTON_UP,
+    GG_MOUSE_MOVED
 };
 
 typedef struct gg_event_mouse

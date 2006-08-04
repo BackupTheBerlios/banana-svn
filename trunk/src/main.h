@@ -107,6 +107,9 @@ typedef struct player
     int anim_pos;
     int facing;
 
+    /* Used for collision */
+    float width, height;
+
     IPaddress *ip;
     TCPsocket socket;
 }player_t;

@@ -81,35 +81,40 @@ int gg_scrollbox_input(gg_widget_t *widget, gg_event_t event)
     float yscroll=GG_VIEWPORT(child)->yscroll;
     int sliderpos=1;
     int slidersize=16;
+    float newpos=0;
 
     if ( event.type == GG_EVENT_MOUSE && event.mouse.x>(widget->width-16) && 
         event.mouse.x<(widget->width) )
     {
-        if ( event.mouse.y < 16 && yscroll-0.05>=0.0f)
+        if ( event.mouse.y < 16 && yscroll-0.05>=0.0f && event.mouse.type == GG_MOUSE_BUTTON_UP )
             gg_viewport_set_scroll_ypos(GG_VIEWPORT(child), yscroll-=0.05 );
 
-        if ( event.mouse.y > widget->height-16 && yscroll+0.05<=1.0f )
+        if ( event.mouse.y > widget->height-16 && yscroll+0.05<=1.0f && event.mouse.type == GG_MOUSE_BUTTON_UP )
             gg_viewport_set_scroll_ypos(GG_VIEWPORT(child), yscroll+=0.05 );
 
         /* Are we over the grabber? */
-       /* slidersize=((float)child->height/(float)view_child->height)*(widget->height-32);
+        slidersize=((float)child->height/(float)view_child->height)*(widget->height-32);
         sliderpos=((widget->height-(32)+1-slidersize)*(1.0-yscroll))-1;
 
-        if ( event.mouse.y >= widget->height-16-slidersize-sliderpos && event.mouse.y <= widget->height-16-sliderpos )
+        if ( event.mouse.y >= widget->height-16-slidersize-sliderpos && event.mouse.y <= 
+            widget->height-16-sliderpos && event.mouse.type == GG_MOUSE_BUTTON_DOWN )
         {
-            printf( "We clicked on grabber..\n" );
-            if ( event.mouse.type == GG_MOUSE_BUTTON_DOWN )
-                GG_SCROLLBOX(widget)->grabbed=TRUE;          
+            GG_SCROLLBOX(widget)->grabbed=TRUE;          
         } 
       
-        if ( event.mouse.type == GG_MOUSE_BUTTON_UP )         
+        if ( event.mouse.type == GG_MOUSE_BUTTON_UP )      
+        {
             GG_SCROLLBOX(widget)->grabbed=FALSE;   
+        }
 
         if ( GG_SCROLLBOX(widget)->grabbed )
-        {
-            gg_viewport_set_scroll_ypos(GG_VIEWPORT(child), ((float)event.mouse.y-16.0f)/((float)widget->height-32.0f) );
-            printf( "Moved %f / %f = %f\n", (float)(event.mouse.y-16.0f), (widget->height-32), GG_VIEWPORT(child)->yscroll );
-        }*/
+        {      
+            newpos=((float)event.mouse.y-16.0f)/((float)widget->height-32.0f);            
+
+            if ( newpos >= 0.0f && newpos <= 1.0f )
+                gg_viewport_set_scroll_ypos(GG_VIEWPORT(child), ((float)event.mouse.y-16.0f)/((float)widget->height-32.0f) );
+            /*printf( "Moved %f / %f = %f\n", (float)(event.mouse.y-16.0f), (widget->height-32), GG_VIEWPORT(child)->yscroll );*/
+        }
 
         return 1;
     }
@@ -127,6 +132,7 @@ void gg_scrollbox_init(gg_scrollbox_t *scrollbox, gg_widget_t *widget)
     scrollbox->input = gg_scrollbox_input;
     scrollbox->id = gg_scrollbox_get_class_id();
     scrollbox->enabled = 1;
+    scrollbox->grabbed=FALSE;
     scrollbox->width = widget->width+scrollbar_width; /* FIXME */
     scrollbox->height = widget->height; /* FIXME */
 }

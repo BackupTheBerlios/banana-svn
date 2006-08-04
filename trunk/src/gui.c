@@ -457,6 +457,13 @@ gg_event_t convert_event(SDL_Event *event)
         }
         break;
 
+    case SDL_MOUSEMOTION:
+        gg_event.type = GG_EVENT_MOUSE;
+        gg_event.mouse.type = GG_MOUSE_MOVED;
+        gg_event.mouse.x = event->button.x;
+        gg_event.mouse.y = 479-event->button.y;
+        break;
+
     case SDL_MOUSEBUTTONDOWN:
         gg_event.type = GG_EVENT_MOUSE;
         gg_event.mouse.type = GG_MOUSE_BUTTON_DOWN;
